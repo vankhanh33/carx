@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1004594200020",
+    "project_id": "xcar-a83b1",
+    "storage_bucket": "xcar-a83b1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1004594200020:android:85f0af6703577767616a41",
+        "android_client_info": {
+          "package_name": "com.carx.carx"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBZYTOYWydCY-CBF0lGMQzN5v-QWPm-MVc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
