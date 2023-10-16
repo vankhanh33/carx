@@ -1,5 +1,6 @@
 import 'package:carx/components/item_car.dart';
-import 'package:carx/view/search_view.dart';
+import 'package:carx/features/search/ui/search_view.dart';
+
 import 'package:flutter/material.dart';
 
 class TopDealsView extends StatefulWidget {
@@ -62,7 +63,7 @@ class _TopDealsViewState extends State<TopDealsView> {
               GridView.builder(
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
-                  return ItemCar();
+                  return Text("data");
                 },
                 itemCount: 10,
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(

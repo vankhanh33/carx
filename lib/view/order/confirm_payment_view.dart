@@ -1,6 +1,6 @@
 // ignore_for_file: sort_child_properties_last
 
-import 'package:carx/view/car_detail_view.dart';
+import 'package:carx/features/car_detail/ui/car_detail_view.dart';
 import 'package:flutter/material.dart';
 
 class ConfirmPaymentView extends StatefulWidget {

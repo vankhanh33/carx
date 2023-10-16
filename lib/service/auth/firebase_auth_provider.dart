@@ -4,7 +4,7 @@ import 'package:carx/service/api/api_service.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:carx/firebase_options.dart';
-import 'package:carx/model/user.dart';
+import 'package:carx/data/model/user.dart';
 
 import 'package:carx/service/auth/auth_exceptions.dart';
 import 'package:carx/service/auth/auth_provider.dart';

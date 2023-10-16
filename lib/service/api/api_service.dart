@@ -1,5 +1,5 @@
-import 'package:carx/model/brand.dart';
-import 'package:carx/model/car.dart';
+import 'package:carx/data/model/brand.dart';
+import 'package:carx/data/model/car.dart';
 import 'package:carx/service/api/api_provider.dart';
 import 'package:carx/service/api/http_api_provider.dart';
 
@@ -33,4 +33,7 @@ class ApiService implements ApiProvider {
 
   @override
   Future<List<Car>> fetchCars() => apiProvider.fetchCars();
+  
+  @override
+  Future<List<Car>> fetchCarByBrand({required String brand}) =>apiProvider.fetchCarByBrand(brand: brand);
 }

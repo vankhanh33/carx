@@ -1,5 +1,5 @@
-import 'package:carx/model/brand.dart';
-import 'package:carx/model/car.dart';
+import 'package:carx/data/model/brand.dart';
+import 'package:carx/data/model/car.dart';
 
 abstract class ApiProvider {
   Future<void> createUser({
@@ -16,4 +16,5 @@ abstract class ApiProvider {
 
   Future<List<Brand>> fetchBrands();
    Future<List<Car>> fetchCars();
+   Future<List<Car>> fetchCarByBrand({required String brand});
 }

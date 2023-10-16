@@ -1,27 +1,55 @@
+import 'package:carx/constants/navigation_controller.dart';
+import 'package:carx/data/model/brand.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
 class ItemCategory extends StatelessWidget {
-  final String name;
-  const ItemCategory({super.key, required this.name});
+  final Brand brand;
+  const ItemCategory({super.key, required this.brand});
 
   @override
   Widget build(BuildContext context) {
+    MainController controller = Get.find();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        CircleAvatar(
-          child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Image.network(
-              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtHooMD36gfYIjXy3Vhz0kvW_S6s4qBwQY4A&usqp=CAU',
-            width: 72,
-            height: 72,),
+        InkWell(
+          onTap: () {
+            if (brand.name == 'All') controller.updateItem(1);
+          },
+          child: Container(
+            decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(999)),
+                color: Color(0xffe5e5e5)),
+            padding: const EdgeInsets.all(12),
+            child: FadeInImage(
+              placeholder:
+                  const AssetImage('assets/images/xcar-full-black.png'),
+              image: NetworkImage(brand.image),
+              width: 32,
+              height: 32,
+              fit: BoxFit.contain,
+              imageErrorBuilder: (context, error, stackTrace) {
+                return Image.asset(
+                  'assets/images/xcar-full-black.png',
+                  width: 32,
+                  height: 32,
+                  fit: BoxFit.contain,
+                );
+              },
+            ),
           ),
-          backgroundColor: Colors.grey,
         ),
-        Text(name)
+        const SizedBox(height: 4),
+        Center(
+          child: Text(
+            brand.name,
+            style: const TextStyle(
+                fontWeight: FontWeight.w500, fontSize: 14, color: Colors.black),
+            maxLines: 1,
+          ),
+        )
       ],
     );
   }

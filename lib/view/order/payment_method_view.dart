@@ -1,3 +1,4 @@
+import 'package:carx/view/order/confirm_payment_view.dart';
 import 'package:flutter/material.dart';
 
 class PaymentMethodView extends StatefulWidget {
@@ -63,3 +64,6 @@ const List<Map<String, dynamic>> payments = [
   {'name': 'PayPal', 'payment': 'paypal'},
   {'name': 'MoMo', 'payment': 'momo'}
 ];
+void main(){
+  runApp(MaterialApp(home: ConfirmPaymentView(),));
+}
