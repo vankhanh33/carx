@@ -1,6 +1,7 @@
 import 'package:carx/constants/navigation_controller.dart';
 import 'package:carx/features/categories/ui/categories_view.dart';
 import 'package:carx/features/home/ui/home_test.dart';
+import 'package:carx/view/personal_view.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -78,5 +79,5 @@ final pages = [
   const CategoriesView(),
   const Text('Hello'),
   const Text('Hello'),
-  const Text('Hello'),
+  const PersonalView(),
 ];

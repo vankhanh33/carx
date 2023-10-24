@@ -31,7 +31,7 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
-  late TabController controller;
+   TabController? controller;
   late StreamController sliderController;
 
   TabNotifier tabNotifier = TabNotifier(currentItem: 0);
@@ -55,7 +55,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    controller.dispose();
+    controller!.dispose();
     sliderController.close();
     homeBloc.close();
     tabNotifier.dispose();

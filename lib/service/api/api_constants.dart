@@ -4,3 +4,5 @@ const getBrand = '/data/get/get-all-brands.php';
 const getCarByBrand = '/data/post/all-cars-by-brand.php';
 const carDetail = '/data/post/detail.php';
 const pathDistributor = '/data/post/fetch_distributor.php';
+const getUserId = '/data/post/fetch-user-id.php';
+const addCarOrder = '/data/post/add-order.php';

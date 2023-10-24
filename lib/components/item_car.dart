@@ -1,5 +1,5 @@
 import 'package:carx/data/model/car.dart';
-import 'package:carx/features/car_detail/ui/detail_test.dart';
+import 'package:carx/features/car_detail/ui/detail_screen.dart';
 import 'package:flutter/material.dart';
 
 class ItemCar extends StatelessWidget {
@@ -12,12 +12,12 @@ class ItemCar extends StatelessWidget {
     return InkWell(
       onTap: () {
         if (car != null) {
-          print(car?.id.toString());
+         
           Navigator.push(
               context,
               MaterialPageRoute(
                   builder: (context) => const CarDetailView(),
-                  settings: RouteSettings(arguments: car?.id)));
+                  settings: RouteSettings(arguments: car)));
         }
       },
       child: SizedBox(

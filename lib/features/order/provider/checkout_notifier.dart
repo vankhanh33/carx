@@ -5,34 +5,23 @@ import 'package:carx/utilities/dialog/error_order_dialog.dart';
 import 'package:carx/utilities/dialog/success_order_dialog.dart';
 import 'package:flutter/material.dart';
 
-class CheckoutNotifier with ChangeNotifier {
-  String shipping;
+class OrderNotifier with ChangeNotifier {
+ 
   String address;
-  String payment;
+ 
   DateTime? fromTime;
   DateTime? endTime;
   double amount;
   int dayRent;
-  CheckoutNotifier({
-    this.shipping = '',
+  OrderNotifier({
+   
     this.address = '',
-    this.payment = '',
     this.amount = 0,
     this.dayRent = 1,
   });
 
-  void updateShipping(String value) {
-    shipping = value;
-    notifyListeners();
-  }
-
   void updateAddress(String value) {
     address = value;
-    notifyListeners();
-  }
-
-  void updatePayment(String value) {
-    payment = value;
     notifyListeners();
   }
 
@@ -100,11 +89,7 @@ class CheckoutNotifier with ChangeNotifier {
   void isCheck(BuildContext context, CarDetail cars) {
     if (address.isEmpty) {
       showErrorOrderDialog(context: context, content: 'Address empty');
-    } else if (shipping.isEmpty) {
-       showErrorOrderDialog(context: context, content: 'shipping empty');
-    } else if (payment.isEmpty) {
-       showErrorOrderDialog(context: context, content: 'payment empty');
-    } else if (fromTime == null) {
+    }else if (fromTime == null) {
        showErrorOrderDialog(context: context, content: 'fromTime empty');
     } else if (endTime == null) {
       showErrorOrderDialog(context: context, content: 'endTime empty');

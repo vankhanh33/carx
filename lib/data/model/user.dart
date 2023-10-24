@@ -28,7 +28,7 @@ class User {
         gender: json['gender'],
       );
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> dataUser = new Map<String, dynamic>();
+    final Map<String, dynamic> dataUser =  Map<String, dynamic>();
     dataUser['id'] = this.id ?? '';
     dataUser['name'] = this.name ?? '';
     dataUser['email'] = this.email ?? '';

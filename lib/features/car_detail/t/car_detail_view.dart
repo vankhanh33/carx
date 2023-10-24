@@ -1,5 +1,6 @@
 // ignore_for_file: library_private_types_in_public_api
 
+import 'package:carx/data/model/car.dart';
 import 'package:carx/data/model/car_detail.dart';
 import 'package:carx/data/model/detail.dart';
 import 'package:carx/data/model/distributor_model.dart';
@@ -8,7 +9,7 @@ import 'package:carx/features/car_detail/bloc/detail_event.dart';
 import 'package:carx/features/car_detail/bloc/detail_state.dart';
 import 'package:carx/service/api/reponsitory/car_reponsitory.dart';
 import 'package:carx/service/api/request/user_request.dart';
-import 'package:carx/view/order/checkout_view.dart';
+import 'package:carx/features/order/provider/orderr.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -37,10 +38,10 @@ class _CarDetailViewState extends State<CarDetailView> {
 
   @override
   Widget build(BuildContext context) {
-    int id = ModalRoute.of(context)!.settings.arguments as int;
+    Car car = ModalRoute.of(context)!.settings.arguments as Car;
     return Scaffold(
       body: BlocBuilder<CarDetailBloc, CarDetailState>(
-        bloc: carDetailBloc..add(FetchCarDetailEvent(carId: id)),
+        bloc: carDetailBloc..add(FetchCarDetailEvent(car: car)),
         builder: (context, state) {
           if (state is CarDetailLoading) {
             return Center(
@@ -300,7 +301,7 @@ class _CarDetailViewState extends State<CarDetailView> {
                       child: ElevatedButton(
                         onPressed: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => CheckoutView(),
+                              builder: (context) => OrderView(),
                               settings: RouteSettings(arguments: car)));
                         },
                         style: ElevatedButton.styleFrom(

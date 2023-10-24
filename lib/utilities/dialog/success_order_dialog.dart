@@ -1,5 +1,5 @@
 
-import 'package:carx/view/order/confirm_payment_view.dart';
+import 'package:carx/features/order_success/order_success_view.dart';
 import 'package:flutter/material.dart';
 
 Future<void> showBookingSuccessDialog({
@@ -22,7 +22,7 @@ Future<void> showBookingSuccessDialog({
           ElevatedButton(
             onPressed: () {
               Navigator.of(context).pushReplacement(MaterialPageRoute(
-                builder: (context) => ConfirmPaymentView(),
+                builder: (context) => OrderSucess(),
               ));
             },
             child: Text('Views'),

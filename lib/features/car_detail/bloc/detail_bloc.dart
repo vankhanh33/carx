@@ -13,7 +13,7 @@ class CarDetailBloc extends Bloc<CarDetailEvent, CarDetailState> {
         emit(CarDetailLoading());
         try {
           final Detail detail =
-              (await carRepository.fetchCarDetails(event.carId)) ;
+              (await carRepository.fetchCarDetails(event.car.id)) ;
           emit(CarDetailSuccess(detail: detail));
          
         } catch (e) {

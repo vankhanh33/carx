@@ -105,7 +105,7 @@ class _CategoriesViewState extends State<CategoriesView>
                                   id: 1,
                                   name: brand.name,
                                   image: brand.image,
-                                  price: '2123132',
+                                  price: 123,
                                   brand: brand.name),
                             ),
                           );
