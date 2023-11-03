@@ -1,28 +1,18 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
 
-import 'package:carx/service/api/api_service.dart';
-import 'package:http/http.dart' as http;
-
-import 'package:carx/firebase_options.dart';
-import 'package:carx/data/model/user.dart';
+import 'package:carx/data/reponsitories/auth/api_auth_service.dart';
 
 import 'package:carx/service/auth/auth_exceptions.dart';
 import 'package:carx/service/auth/auth_provider.dart';
 import 'package:carx/service/auth/auth_user.dart';
+import 'package:carx/utils/notification/firebase_messaging_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/services.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';
 
 class FirebaseAuthProvider implements AuthProvider {
-  @override
-  Future<void> initialize() async {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-  }
-
   @override
   AuthUser? get currentUser {
     final user = FirebaseAuth.instance.currentUser;
@@ -41,14 +31,18 @@ class FirebaseAuthProvider implements AuthProvider {
   }) async {
     if (name.isEmpty) throw NotInputUserNameException();
     if (password != confirmPassword) throw PasswordIncorrectException();
-
+    String? token = await FirebaseMessagingService().getFirebaseToken();
     try {
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
       final user = currentUser;
       if (user != null) {
-        await ApiService.fromApi()
-            .createUser(id: user.id, name: name, email: email);
+        await ApiAuthService.fromApi().createOrUpdateUser(
+          id: user.id,
+          name: name,
+          email: email,
+          token: token,
+        );
         return user;
       } else {
         throw UserNotLoggedInAuthException();
@@ -72,6 +66,7 @@ class FirebaseAuthProvider implements AuthProvider {
   Future<void> logOut() async {
     final user = currentUser;
     if (user != null) {
+      await GoogleSignIn().signOut();
       await FirebaseAuth.instance.signOut();
     } else {
       throw UserNotLoggedInAuthException();
@@ -81,11 +76,17 @@ class FirebaseAuthProvider implements AuthProvider {
   @override
   Future<AuthUser> loginWithEmail(
       {required String email, required String password}) async {
+    String? token = await FirebaseMessagingService().getFirebaseToken();
     try {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       final user = currentUser;
       if (user != null) {
+        await ApiAuthService.fromApi().createOrUpdateUser(
+          id: user.id,
+          email: email,
+          token: token,
+        );
         return user;
       } else {
         throw UserNotLoggedInAuthException();
@@ -107,24 +108,22 @@ class FirebaseAuthProvider implements AuthProvider {
 
   @override
   Future<AuthUser> loginWithPhone({required String phone}) {
-    // TODO: implement loginWithPhone
     throw UnimplementedError();
   }
 
   @override
   Future<void> sendPasswordResetWithEmail({required String email}) {
-    // TODO: implement sendPasswordResetWithEmail
     throw UnimplementedError();
   }
 
   @override
   Future<void> sendPasswordResetWithPhone({required String phone}) {
-    // TODO: implement sendPasswordResetWithPhone
     throw UnimplementedError();
   }
 
   @override
   Future<AuthUser> loginWithGoogle() async {
+    String? token = await FirebaseMessagingService().getFirebaseToken();
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       final GoogleSignInAuthentication? googleAuth =
@@ -138,12 +137,14 @@ class FirebaseAuthProvider implements AuthProvider {
       final user = currentUser;
       final userAuth = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        await ApiService.fromApi().createUserWithGoogle(
+        await ApiAuthService.fromApi().createOrUpdateUser(
           id: user.id,
           email: user.email,
           image: userAuth?.photoURL,
           name: userAuth?.displayName,
+          token: token,
         );
+
         return user;
       } else {
         throw UserNotLoggedInAuthException();

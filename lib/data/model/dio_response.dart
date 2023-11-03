@@ -1,8 +1,8 @@
-class DioResponse {
+class DioReponse {
   final String status;
   final dynamic data;
-  const DioResponse({required this.status, required this.data});
-  factory DioResponse.fromJson(Map<String, dynamic> json) => DioResponse(
+  const DioReponse({required this.status, required this.data});
+  factory DioReponse.fromJson(Map<String, dynamic> json) => DioReponse(
         status: json['status'],
         data: json['data'],
       );

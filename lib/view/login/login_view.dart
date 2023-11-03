@@ -2,6 +2,7 @@ import 'package:carx/bloc/auth/auth_bloc.dart';
 import 'package:carx/bloc/auth/auth_event.dart';
 import 'package:carx/bloc/auth/auth_state.dart';
 import 'package:carx/service/auth/auth_exceptions.dart';
+import 'package:carx/utilities/app_colors.dart';
 import 'package:carx/utilities/dialog/error_dialog.dart';
 import 'package:flutter/material.dart';
 
@@ -58,219 +59,243 @@ class LoginState extends State<LoginView> {
         }
       },
       child: Scaffold(
-        // resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          title: const Text('Login'),
-        ),
-        backgroundColor: Color(0xffe5e5e5),
+        backgroundColor: const Color.fromARGB(255, 243, 243, 243),
         body: SingleChildScrollView(
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  SizedBox(
-                      width: (MediaQuery.of(context).size.width) / 2,
-                      child: Image.asset(
-                        'assets/images/xcar-195x195-black.png',
-                        fit: BoxFit.contain,
-                      )),
-                  const Text(
-                    'Login',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          child: Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(12, 48, 12, 12),
+            child: Column(
+              children: [
+                Image.asset(
+                  'assets/images/xcar-195x195-black.png',
+                  fit: BoxFit.cover,
+                  width: 177,
+                  height: 177,
+                ),
+                const Text(
+                  'SIGN IN \nTO CONTINUE',
+                  maxLines: 2,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primary),
+                ),
+                const SizedBox(height: 32),
+                TextField(
+                  controller: _emailController,
+                  autocorrect: false,
+                  cursorColor: Colors.black,
+                  decoration: const InputDecoration(
+                    hintText: 'Email',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(12),
+                      ),
+                      borderSide: BorderSide.none,
+                    ),
+                    fillColor: Colors.white,
+                    filled: true,
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(12),
+                      ),
+                      borderSide: BorderSide(width: 1, color: Colors.black54),
+                    ),
+                    prefixIconColor: Colors.grey,
+                    prefixIcon: Icon(Icons.person),
                   ),
-                  const SizedBox(height: 32),
-                  TextField(
-                    controller: _emailController,
-                    autocorrect: false,
-                    cursorColor: Colors.grey,
-                    decoration: const InputDecoration(
-                      hintText: 'Email',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(12),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _passwordController,
+                  cursorColor: Colors.black,
+                  obscureText: _hiddenPassword,
+                  decoration: InputDecoration(
+                      hintText: 'Password',
+                      prefixIcon: const Icon(Icons.lock_person_outlined),
+                      semanticCounterText: 'Password',
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            _hiddenPassword = !_hiddenPassword;
+                          });
+                        },
+                        icon: Icon(
+                          _hiddenPassword
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          size: 24,
                         ),
+                      ),
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
                         borderSide: BorderSide.none,
                       ),
                       fillColor: Colors.white,
                       filled: true,
-                      focusedBorder: OutlineInputBorder(
+                      focusedBorder: const OutlineInputBorder(
                         borderRadius: BorderRadius.all(
                           Radius.circular(12),
                         ),
                         borderSide: BorderSide(width: 1, color: Colors.black54),
                       ),
                       prefixIconColor: Colors.grey,
-                      prefixIcon: const Icon(Icons.person),
+                      suffixIconColor: Colors.grey),
+                ),
+                const SizedBox(height: 12),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () {},
+                    style: TextButton.styleFrom(
+                      shadowColor: Colors.transparent,
+                    ),
+                    child: const Text(
+                      'Forgot password',
+                      style: TextStyle(color: AppColors.fontColor),
                     ),
                   ),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: _passwordController,
-                    cursorColor: Colors.grey,
-                    obscureText: _hiddenPassword,
-                    decoration: InputDecoration(
-                        hintText: 'Password',
-                        prefixIcon: const Icon(Icons.lock_person_outlined),
-                        semanticCounterText: 'Password',
-                        suffixIcon: IconButton(
-                          onPressed: () {
-                            setState(() {
-                              _hiddenPassword = !_hiddenPassword;
-                            });
-                          },
-                          icon: Icon(
-                            _hiddenPassword
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                            size: 24,
-                          ),
-                        ),
-                        border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(12)),
-                          borderSide: BorderSide.none,
-                        ),
-                        fillColor: Colors.white,
-                        filled: true,
-                        focusedBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(12),
-                          ),
-                          borderSide:
-                              BorderSide(width: 1, color: Colors.black54),
-                        ),
-                        prefixIconColor: Colors.grey,
-                        suffixIconColor: Colors.grey),
-                  ),
-                  const SizedBox(height: 12),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        'Forgot password',
-                      ),
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.black,
+                ),
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: (MediaQuery.of(context).size.width) * (2 / 3),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        shadowColor: Colors.transparent,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(999))),
+                    onPressed: () {
+                      context.read<AuthBloc>().add(
+                            AuthEventLogIn(
+                                email: _emailController.text,
+                                password: _passwordController.text),
+                          );
+                    },
+                    child: const Text(
+                      'Log In',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.secondary,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 32),
-                  SizedBox(
-                    width: (MediaQuery.of(context).size.width) * (2 / 3),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.yellow[700],
-                        foregroundColor: Colors.black,
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                      ),
-                      onPressed: () {
-                        context.read<AuthBloc>().add(
-                              AuthEventLogIn(
-                                  email: _emailController.text,
-                                  password: _passwordController.text),
-                            );
-                      },
-                      child: const Text(
-                        'Login',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 48),
+                const Text(
+                  'Or continues with',
+                  style: TextStyle(color: Colors.black, fontSize: 16),
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    const SizedBox(
+                      width: 16,
+                    ),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: const Color(0xffe0e3e7),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            elevation: 0,
+                            shadowColor: Colors.transparent,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(999)),
+                              side: BorderSide(
+                                  width: 1, color: Color(0xffe0e3e7)),
+                            )),
+                        label: const Text(
+                          'Facebook',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black),
+                        ),
+                        icon: Image.asset(
+                          'assets/images/facebook.png',
+                          width: 24,
+                          height: 24,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 48),
-                  const Text(
-                    'Or continues with',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      const SizedBox(
-                        width: 16,
-                      ),
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              foregroundColor: Colors.black,
-                              padding: const EdgeInsets.symmetric(vertical: 20),
-                              elevation: 1,
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(999)))),
-                          label: const Text(
-                            'Facebook',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w500),
-                          ),
-                          icon: Image.asset(
-                            'assets/images/facebook.png',
-                            width: 24,
-                            height: 24,
-                          ),
+                    const SizedBox(
+                      width: 24,
+                    ),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () async {
+                          context
+                              .read<AuthBloc>()
+                              .add(const AuthEventLogInWithGoogle());
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: const Color(0xffe0e3e7),
+                            elevation: 0,
+                            shadowColor: Colors.transparent,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(999)),
+                              side: BorderSide(
+                                  width: 1, color: Color(0xffe0e3e7)),
+                            )),
+                        label: const Text(
+                          'Google',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black),
+                        ),
+                        icon: Image.asset(
+                          'assets/images/google.png',
+                          width: 24,
+                          height: 24,
                         ),
                       ),
-                      const SizedBox(
-                        width: 24,
-                      ),
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: () async {
-                            context
-                                .read<AuthBloc>()
-                                .add(const AuthEventLogInWithGoogle());
-                          },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              foregroundColor: Colors.black,
-                              elevation: 1,
-                              padding: const EdgeInsets.symmetric(vertical: 20),
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(999)))),
-                          label: const Text(
-                            'Google',
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w500),
-                          ),
-                          icon: Image.asset(
-                            'assets/images/google.png',
-                            width: 24,
-                            height: 24,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 16,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'Don\'t have account',
-                      ),
-                      TextButton(
+                    ),
+                    const SizedBox(
+                      width: 16,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Don\'t have account',
+                      style:
+                          TextStyle(fontSize: 16, color: AppColors.fontColor),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 2),
+                      child: TextButton(
                           onPressed: () {
                             context
                                 .read<AuthBloc>()
                                 .add(const AuthEventShouldRegister());
                           },
+                          style: TextButton.styleFrom(
+                              shadowColor: Colors.transparent,
+                              foregroundColor: Colors.transparent),
                           child: const Text(
                             'Register',
-                            style:
-                                TextStyle(decoration: TextDecoration.underline),
-                          ))
-                    ],
-                  ),
-                  const Spacer(),
-                ],
-              ),
+                            style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                color: AppColors.secondary,
+                                fontSize: 18),
+                          )),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 48),
+              ],
             ),
           ),
         ),

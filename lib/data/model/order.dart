@@ -5,11 +5,11 @@ class Order {
   int? amount;
   int? totalAmount;
   int? deliveryCharges;
-  String? fromTime;
+  String? startTime;
   String? endTime;
   String? paymentstatus;
   String? paymentMethods;
-  String? discountId;
+  String? discountAmount;
   String? carId;
   String? userId;
 
@@ -20,18 +20,18 @@ class Order {
     this.amount,
     this.totalAmount,
     this.deliveryCharges,
-    this.fromTime,
+    this.startTime,
     this.endTime,
     this.paymentstatus,
     this.paymentMethods,
-    this.discountId,
+    this.discountAmount,
     this.carId,
     this.userId,
   });
 
   @override
   String toString() {
-    return '$code - $status - $totalAmount - $amount - $deliveryCharges - $fromTime - $endTime - $paymentMethods - $paymentstatus - $carId - $userId';
+    return '$code - $status - $totalAmount - $amount - $deliveryCharges - $startTime - $endTime - $paymentMethods - $paymentstatus - $carId - $userId';
   }
 
   Order copyWith({
@@ -41,11 +41,11 @@ class Order {
     int? amount,
     int? totalAmount,
     int? deliveryCharges,
-    String? fromTime,
+    String? startTime,
     String? endTime,
     String? paymentstatus,
     String? paymentMethods,
-    String? discountId,
+    String? discountAmount,
     String? carId,
     String? userId,
   }) =>
@@ -56,46 +56,47 @@ class Order {
         amount: amount ?? this.amount,
         totalAmount: totalAmount ?? this.totalAmount,
         deliveryCharges: deliveryCharges ?? this.deliveryCharges,
-        fromTime: fromTime ?? this.fromTime,
+        startTime: startTime ?? this.startTime,
         endTime: endTime ?? this.endTime,
         paymentstatus: paymentstatus ?? this.paymentstatus,
         paymentMethods: paymentMethods ?? this.paymentMethods,
-        discountId: discountId ?? this.discountId,
+        discountAmount: discountAmount ?? this.discountAmount,
         carId: carId ?? this.carId,
         userId: userId ?? this.userId,
       );
 
   Order.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
     code = json['code'];
     status = json['status'];
     amount = int.tryParse(json['amount']);
     totalAmount = int.tryParse(json['total_amount']);
     deliveryCharges = int.tryParse(json['delivery_charges']);
-    fromTime = json['from_time'];
+    startTime = json['start_time'];
     endTime = json['end_time'];
     paymentstatus = json['payment_status'];
     paymentMethods = json['payment_methods'];
-    discountId = json['discount_id '];
+    discountAmount = json['discount_amount'];
     carId = json['car_id '];
     userId = json['user_id '];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
     data['code'] = code;
     data['status'] = status;
     data['amount'] = amount;
     data['total_amount'] = totalAmount;
     data['delivery_charges'] = deliveryCharges;
-    data['from_time'] = fromTime;
+    data['start_time'] = startTime;
     data['end_time'] = endTime;
     data['payment_status'] = paymentstatus;
     data['payment_methods'] = paymentMethods;
     data['car_id'] = carId!;
     data['user_id'] = userId;
-    if (discountId != null) {
-      data['discount_id'] = discountId;
-    }
+    data['discount_amount'] = discountAmount ?? '0';
+
     return data;
   }
 }

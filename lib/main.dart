@@ -3,45 +3,67 @@
 import 'package:carx/bloc/auth/auth_bloc.dart';
 import 'package:carx/bloc/auth/auth_event.dart';
 import 'package:carx/bloc/auth/auth_state.dart';
+import 'package:carx/firebase_options.dart';
 import 'package:carx/loading/loading_screen.dart';
 import 'package:carx/service/auth/firebase_auth_provider.dart';
+import 'package:carx/utilities/app_colors.dart';
+import 'package:carx/utilities/app_routes.dart';
+import 'package:carx/utils/notification/firebase_messaging_service.dart';
 import 'package:carx/view/login/login_view.dart';
 
 import 'package:carx/view/login/register.dart';
 import 'package:carx/view/main_view.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   runApp(
     MaterialApp(
       theme: ThemeData(
         backgroundColor: Color(0xffe5e5e5),
         appBarTheme: AppBarTheme(
-          backgroundColor: Colors.yellow[700],
+          backgroundColor: AppColors.primary,
           titleTextStyle: TextStyle(
-            color: Colors.black,
+            color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
-          elevation: 1,
-          iconTheme: IconThemeData(color: Colors.black),
+          elevation: 2,
+          shadowColor: Color(0xffe0e3e7),
+          iconTheme: IconThemeData(color: Colors.white),
         ),
       ),
       home: BlocProvider(
         create: (context) => AuthBloc(FirebaseAuthProvider()),
         child: const MyApp(),
       ),
+      routes: Routes.pages,
       debugShowCheckedModeBanner: false,
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final FirebaseMessagingService _messagingService = FirebaseMessagingService();
+  @override
+  void initState() {
+    _messagingService.configureFirebaseMessaging();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

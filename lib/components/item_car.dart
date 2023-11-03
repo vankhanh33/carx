@@ -1,6 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carx/data/model/car.dart';
-import 'package:carx/features/car_detail/ui/detail_screen.dart';
+import 'package:carx/data/features/car_detail/ui/detail_screen.dart';
+import 'package:carx/utilities/app_routes.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 class ItemCar extends StatelessWidget {
   final Car? car;
@@ -12,12 +15,7 @@ class ItemCar extends StatelessWidget {
     return InkWell(
       onTap: () {
         if (car != null) {
-         
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const CarDetailView(),
-                  settings: RouteSettings(arguments: car)));
+          Navigator.pushNamed(context, Routes.routeCarDetail, arguments: car);
         }
       },
       child: SizedBox(
@@ -34,13 +32,14 @@ class ItemCar extends StatelessWidget {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: FadeInImage(
-                  placeholder:
-                      const AssetImage('assets/images/xcar-full-black.png'),
-                  image: NetworkImage('${car?.image}'),
+                child: CachedNetworkImage(
+                  placeholder: (context, url) {
+                    return shimmerImageCar();
+                  },
+                  imageUrl: '${car?.image}',
                   height: 150,
                   fit: BoxFit.contain,
-                  imageErrorBuilder: (context, error, stackTrace) {
+                  errorWidget: (context, url, error) {
                     return Image.asset(
                       'assets/images/xcar-full-black.png',
                       height: 150,
@@ -85,6 +84,18 @@ class ItemCar extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget shimmerImageCar() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.withOpacity(0.5),
+      highlightColor: Colors.grey,
+      child: Image.asset(
+        'assets/images/xcar-full-black.png',
+        height: 150,
+        fit: BoxFit.contain,
       ),
     );
   }

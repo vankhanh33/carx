@@ -1,5 +1,5 @@
 
-import 'package:carx/features/order_success/order_success_view.dart';
+import 'package:carx/data/features/order_success/order_success_view.dart';
 import 'package:flutter/material.dart';
 
 Future<void> showBookingSuccessDialog({

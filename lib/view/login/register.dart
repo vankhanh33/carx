@@ -3,13 +3,13 @@ import 'package:carx/bloc/auth/auth_event.dart';
 import 'package:carx/bloc/auth/auth_state.dart';
 
 import 'package:carx/service/auth/auth_exceptions.dart';
+import 'package:carx/utilities/app_colors.dart';
 import 'package:carx/utilities/dialog/error_dialog.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RegisterView extends StatefulWidget {
-  
   const RegisterView({super.key});
 
   @override
@@ -72,27 +72,43 @@ class RegisterState extends State<RegisterView> {
         }
       },
       child: Scaffold(
-        // resizeToAvoidBottomInset: false,
+        backgroundColor: const Color.fromARGB(255, 243, 243, 243),
         appBar: AppBar(
-          title: const Text('Register'),
+          leading: IconButton(
+              onPressed: () {
+                context.read<AuthBloc>().add(const AuthEventLogOut());
+              },
+              icon: const Icon(Icons.arrow_back)),
+          title: const Text('Sign In'),
         ),
-        backgroundColor: Color(0xffe5e5e5),
         body: SingleChildScrollView(
           child: SizedBox(
-            height: MediaQuery.of(context).size.height,
+            height: MediaQuery.of(context).size.height - 48,
             child: Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsetsDirectional.fromSTEB(12, 48, 12, 12),
               child: Column(
                 children: [
-                  SizedBox(
-                      width: (MediaQuery.of(context).size.width) / 2,
-                      child: Image.asset(
-                        'assets/images/xcar-195x195-black.png',
-                        fit: BoxFit.contain,
-                      )),
+                  const Spacer(),
                   const Text(
-                    'Register Your Account',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    'CREATE NEW ACCOUNT',
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.primary),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 6),
+                    child: Text(
+                      'Please enter info to create account',
+                      maxLines: 2,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.secondary),
+                    ),
                   ),
                   const SizedBox(height: 32),
                   TextField(
@@ -116,10 +132,10 @@ class RegisterState extends State<RegisterView> {
                         borderSide: BorderSide(width: 1, color: Colors.black54),
                       ),
                       prefixIconColor: Colors.grey,
-                      prefixIcon: const Icon(Icons.person),
+                      prefixIcon: Icon(Icons.person),
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
                   TextField(
                     controller: _emailController,
                     autocorrect: false,
@@ -144,7 +160,7 @@ class RegisterState extends State<RegisterView> {
                       prefixIcon: const Icon(Icons.email_rounded),
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
                   TextField(
                     controller: _passwordController,
                     cursorColor: Colors.grey,
@@ -182,7 +198,7 @@ class RegisterState extends State<RegisterView> {
                         prefixIconColor: Colors.grey,
                         suffixIconColor: Colors.grey),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
                   TextField(
                     controller: _confirmController,
                     cursorColor: Colors.grey,
@@ -223,11 +239,6 @@ class RegisterState extends State<RegisterView> {
                   SizedBox(
                     width: (MediaQuery.of(context).size.width) * (2 / 3),
                     child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.yellow[700],
-                        foregroundColor: Colors.black,
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                      ),
                       onPressed: () {
                         context.read<AuthBloc>().add(
                               AuthEventRegister(
@@ -238,19 +249,30 @@ class RegisterState extends State<RegisterView> {
                               ),
                             );
                       },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          foregroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(999))),
                       child: const Text(
                         'Register',
                         style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.secondary,
+                        ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 48),
+                  const Spacer(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
                         'You have an account',
+                        style: TextStyle(fontSize: 16),
                       ),
                       TextButton(
                           onPressed: () {
@@ -260,8 +282,9 @@ class RegisterState extends State<RegisterView> {
                           },
                           child: const Text(
                             'Login',
-                            style:
-                                TextStyle(decoration: TextDecoration.underline),
+                            style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                fontSize: 16,color: AppColors.secondary),
                           ))
                     ],
                   ),

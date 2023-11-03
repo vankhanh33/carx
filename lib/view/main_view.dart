@@ -1,7 +1,12 @@
-import 'package:carx/constants/navigation_controller.dart';
-import 'package:carx/features/categories/ui/categories_view.dart';
-import 'package:carx/features/home/ui/home_test.dart';
-import 'package:carx/view/personal_view.dart';
+// ignore_for_file: deprecated_member_use
+
+import 'package:carx/utilities/app_colors.dart';
+import 'package:carx/utils/navigation_controller.dart';
+import 'package:carx/data/features/categories/ui/categories_view.dart';
+import 'package:carx/data/features/home/ui/home_screen.dart';
+import 'package:carx/data/features/order_management/ui/car_rental_booking.dart';
+import 'package:carx/data/features/personal/personal_view.dart';
+import 'package:carx/view/notification_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -18,7 +23,6 @@ class _MainViewState extends State<MainView> {
   final MainController controller = Get.put(MainController());
   @override
   void dispose() {
-    controller.dispose();
     super.dispose();
   }
 
@@ -29,47 +33,62 @@ class _MainViewState extends State<MainView> {
       bottomNavigationBar: Obx(
         () => BottomNavigationBar(
           items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-                icon: SvgPicture.asset(
-                  'assets/svg/home.svg',
-                  color: Colors.white,
-                ),
-                label: 'Home'),
-            BottomNavigationBarItem(
-                icon: SvgPicture.asset(
-                  'assets/svg/categories.svg',
-                  color: Colors.white,
-                ),
-                label: 'Category'),
-            BottomNavigationBarItem(
-                icon: SvgPicture.asset(
-                  'assets/svg/explore.svg',
-                  color: Colors.white,
-                ),
-                label: 'Explore'),
-            BottomNavigationBarItem(
-                icon: SvgPicture.asset(
-                  'assets/svg/bell.svg',
-                  color: Colors.white,
-                ),
-                label: 'Notification'),
-            BottomNavigationBarItem(
-                icon: SvgPicture.asset(
-                  'assets/svg/person.svg',
-                  color: Colors.white,
-                ),
-                label: 'Personal'),
+            bottomNavigationItem(
+              'assets/svg/home.svg',
+              'Home',
+              controller.currentItem.value,
+              0,
+            ),
+            bottomNavigationItem(
+              'assets/svg/categories.svg',
+              'Categories',
+              controller.currentItem.value,
+              1,
+            ),
+            bottomNavigationItem(
+              'assets/svg/explore.svg',
+              'Explore',
+              controller.currentItem.value,
+              2,
+            ),
+            bottomNavigationItem(
+              'assets/svg/bell.svg',
+              'Notification',
+              controller.currentItem.value,
+              3,
+            ),
+            bottomNavigationItem(
+              'assets/svg/person.svg',
+              'Personal',
+              controller.currentItem.value,
+              4,
+            ),
           ],
           currentIndex: controller.currentItem.value,
           onTap: (value) {
             controller.updateItem(value);
           },
           showUnselectedLabels: false,
-          backgroundColor: Colors.yellow[700],
-          fixedColor: Colors.white,
+          backgroundColor: AppColors.primary,
+          fixedColor: AppColors.secondary,
           type: BottomNavigationBarType.fixed,
         ),
       ),
+    );
+  }
+
+  BottomNavigationBarItem bottomNavigationItem(
+    String assetIcon,
+    String label,
+    int currentIndex,
+    int index,
+  ) {
+    return BottomNavigationBarItem(
+      icon: SvgPicture.asset(
+        assetIcon,
+        color: currentIndex == index ? AppColors.secondary : Colors.white,
+      ),
+      label: label,
     );
   }
 }
@@ -77,7 +96,7 @@ class _MainViewState extends State<MainView> {
 final pages = [
   const HomeView(),
   const CategoriesView(),
-  const Text('Hello'),
-  const Text('Hello'),
+  const CarRentalBooking(),
+  const NotificationScreeen(),
   const PersonalView(),
 ];

@@ -1,10 +1,12 @@
-class Brand {
+import 'package:equatable/equatable.dart';
+
+class Brand extends Equatable {
   final int? id;
   final String name;
   final String image;
 
   const Brand({
-     this.id,
+    this.id,
     required this.name,
     required this.image,
   });
@@ -13,4 +15,7 @@ class Brand {
         name: json['name'],
         image: json['image'],
       );
+
+  @override
+  List<Object?> get props => [id, name, image];
 }
