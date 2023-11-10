@@ -1,7 +1,7 @@
 import 'package:carx/data/model/car.dart';
 import 'package:carx/data/features/search/bloc/search_event.dart';
 import 'package:carx/data/features/search/bloc/search_state.dart';
-import 'package:carx/data/reponsitories/car_reponsitory.dart';
+import 'package:carx/data/reponsitories/car/car_reponsitory.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {

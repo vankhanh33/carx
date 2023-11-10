@@ -1,8 +1,13 @@
 import 'package:carx/data/model/car.dart';
+import 'package:carx/data/model/delivery_address.dart';
 
-class OrderState {
+import 'package:equatable/equatable.dart';
+
+enum FetchDeliveryAddressStatus { initial, loading, success, failure }
+
+class OrderState extends Equatable {
   final int delivery;
-  final String address;
+
   final DateTime? startTime;
   final DateTime? endTime;
   final int rentalDuration;
@@ -11,9 +16,12 @@ class OrderState {
   final bool isLoading;
   final Car? car;
 
-  OrderState({
+  final DeliveryAddress? deliveryAddress;
+
+  final FetchDeliveryAddressStatus deliveryAddressStatus;
+
+  const OrderState({
     required this.delivery,
-    required this.address,
     required this.startTime,
     required this.endTime,
     required this.price,
@@ -21,23 +29,25 @@ class OrderState {
     required this.totalAmount,
     required this.isLoading,
     required this.car,
+    required this.deliveryAddress,
+    required this.deliveryAddressStatus,
   });
 
   OrderState.initial()
       : delivery = 0,
-        address = '',
         startTime = null,
         endTime = null,
         price = 0,
         rentalDuration = 1,
         totalAmount = 0,
         isLoading = false,
-        car = null;
+        car = null,
+        deliveryAddress = null,
+        deliveryAddressStatus = FetchDeliveryAddressStatus.initial;
 
   OrderState copyWith({
     int? delivery,
     String? address,
-    String? payment,
     DateTime? startTime,
     DateTime? endTime,
     int? price,
@@ -45,10 +55,11 @@ class OrderState {
     int? totalAmount,
     bool? isLoading,
     Car? car,
+    DeliveryAddress? deliveryAddress,
+    FetchDeliveryAddressStatus? deliveryAddressStatus,
   }) {
     return OrderState(
       delivery: delivery ?? this.delivery,
-      address: address ?? this.address,
       startTime: startTime ?? this.startTime,
       endTime: endTime ?? this.endTime,
       price: price ?? this.price,
@@ -56,6 +67,23 @@ class OrderState {
       totalAmount: totalAmount ?? this.totalAmount,
       isLoading: isLoading ?? this.isLoading,
       car: car ?? this.car,
+      deliveryAddress: deliveryAddress ?? this.deliveryAddress,
+      deliveryAddressStatus:
+          deliveryAddressStatus ?? this.deliveryAddressStatus,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        delivery,
+        startTime,
+        endTime,
+        price,
+        rentalDuration,
+        totalAmount,
+        isLoading,
+        car,
+        deliveryAddress,
+        deliveryAddressStatus,
+      ];
 }

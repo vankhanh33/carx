@@ -1,4 +1,5 @@
 import 'package:carx/data/model/car.dart';
+import 'package:carx/data/model/delivery_address.dart';
 import 'package:flutter/material.dart';
 
 class OrderEvent {}
@@ -9,10 +10,11 @@ class DeliveryUpdated extends OrderEvent {
   DeliveryUpdated(this.delivery);
 }
 
-class AddressUpdated extends OrderEvent {
-  final String? address;
+class FetchDeliveryAddressOrderEvent extends OrderEvent {}
 
-  AddressUpdated(this.address);
+class UpdateDeliveryAddressOrderEvent extends OrderEvent {
+  final DeliveryAddress deliveryAddress;
+  UpdateDeliveryAddressOrderEvent({required this.deliveryAddress});
 }
 
 class FromTimeUpdated extends OrderEvent {

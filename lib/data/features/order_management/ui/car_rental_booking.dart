@@ -1,8 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:carx/data/features/order_management/bloc/order_management_bloc.dart';
 import 'package:carx/data/features/order_management/bloc/order_management_event.dart';
 import 'package:carx/data/features/order_management/bloc/order_management_state.dart';
 
-import 'package:carx/data/reponsitories/api/order_reponsitory.dart';
+import 'package:carx/data/reponsitories/order/order_reponsitory_impl.dart';
 import 'package:carx/service/auth/firebase_auth_provider.dart';
 import 'package:carx/components/item_car_booking.dart';
 import 'package:carx/components/shimmer_car_booking.dart';
@@ -28,7 +30,9 @@ class _CarRentalBookingState extends State<CarRentalBooking>
   void initState() {
     _tabController = TabController(vsync: this, length: tabs.length);
     bloc = OrderManagementBloc(
-        OrderReponsitory.response(), FirebaseAuthProvider());
+        OrderReponsitoryImpl.response(), FirebaseAuthProvider());
+    bloc.add(FetchOrderManagementEvent());
+    bloc.add(FetchOrderManagementByStatusEvent(status: tabs[0]));
     super.initState();
   }
 
@@ -46,7 +50,7 @@ class _CarRentalBookingState extends State<CarRentalBooking>
         title: const Text('My Car Booking'),
       ),
       body: BlocProvider(
-        create: (context) => bloc..add(FetchOrderManagementEvent()),
+        create: (context) => bloc,
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: Column(
@@ -72,6 +76,10 @@ class _CarRentalBookingState extends State<CarRentalBooking>
                         ),
                       )
                       .toList(),
+                  onTap: (value) {
+                    bloc.add(
+                        FetchOrderManagementByStatusEvent(status: tabs[value]));
+                  },
                 ),
               ),
               const SizedBox(height: 8),
@@ -83,8 +91,6 @@ class _CarRentalBookingState extends State<CarRentalBooking>
                       .map((tab) => BlocBuilder<OrderManagementBloc,
                               OrderManagementState>(
                             builder: (context, state) {
-                              bloc.add(FetchOrderManagementByStatusEvent(
-                                  status: tab));
                               if (state.status ==
                                   OrderManagementStatus.loading) {
                                 return ListView.builder(
@@ -131,17 +137,16 @@ class _CarRentalBookingState extends State<CarRentalBooking>
                                         padding: const EdgeInsets.all(12.0),
                                         child: Image.asset(
                                           'assets/images/order-empty.png',
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          height: 300,
+                                          width: 166,
+                                          height: 166,
                                         ),
                                       ),
                                       const Text(
                                         'You haven\'t rented any car yet',
                                         style: TextStyle(
-                                            fontSize: 24,
+                                            fontSize: 12,
                                             color: Colors.grey,
-                                            fontWeight: FontWeight.bold),
+                                            fontWeight: FontWeight.w400),
                                       ),
                                     ],
                                   );

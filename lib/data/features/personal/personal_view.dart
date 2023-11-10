@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carx/bloc/auth/auth_bloc.dart';
-import 'package:carx/bloc/auth/auth_event.dart';
+import 'package:carx/view/login/bloc/auth_bloc.dart';
+import 'package:carx/view/login/bloc/auth_event.dart';
 
 import 'package:carx/data/features/personal/bloc/personal_bloc.dart';
 import 'package:carx/data/features/personal/bloc/personal_event.dart';
@@ -119,7 +119,7 @@ class _PersonalViewState extends State<PersonalView> {
                                     baseColor: Colors.grey.withOpacity(0.5),
                                     highlightColor: Colors.grey,
                                     child: Image.asset(
-                                      'assets/images/xcar-full-black.png',
+                                       'assets/images/logo-dark.png',
                                       width: 120,
                                       height: 120,
                                       fit: BoxFit.cover,
@@ -137,7 +137,7 @@ class _PersonalViewState extends State<PersonalView> {
                                   if (state.fetchUserStatus ==
                                       FetchUserStatus.failure) {
                                     return Image.asset(
-                                      'assets/images/xcar-full-black.png',
+                                      'assets/images/logo-dark.png',
                                       width: 120,
                                       height: 120,
                                       fit: BoxFit.cover,
@@ -282,13 +282,13 @@ final items = [
     icon: 'assets/svg/truck.svg',
     title: 'Address',
     subtitle: 'view and manage your address',
-    route: Routes.routeAllOrder,
+    route: Routes.routeDeliveryAddresses,
   ),
   SettingItem(
     icon: 'assets/svg/bell.svg',
     title: 'Notification',
     subtitle: 'view edit profile user',
-    route: Routes.routeAllOrder,
+    route: Routes.routeDeliveryAddresses,
   ),
   SettingItem(
     icon: 'assets/svg/payment.svg',

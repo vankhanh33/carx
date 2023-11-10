@@ -3,7 +3,7 @@ import 'package:carx/data/model/brand.dart';
 import 'package:carx/data/model/car.dart';
 import 'package:carx/data/model/order.dart';
 import 'package:carx/data/model/order_management.dart';
-import 'package:carx/data/features/order_management_detail/ui/car_rental_booking_detail.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';

@@ -5,7 +5,7 @@ import 'package:carx/data/reponsitories/auth/api_auth_service.dart';
 import 'package:carx/service/auth/auth_exceptions.dart';
 import 'package:carx/service/auth/auth_provider.dart';
 import 'package:carx/service/auth/auth_user.dart';
-import 'package:carx/utils/notification/firebase_messaging_service.dart';
+import 'package:carx/utilities/notification/firebase_messaging_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/services.dart';

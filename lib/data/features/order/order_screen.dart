@@ -1,16 +1,17 @@
-import 'package:carx/bloc/user/user_bloc.dart';
-import 'package:carx/bloc/user/user_event.dart';
-import 'package:carx/bloc/user/user_state.dart';
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carx/data/features/order/select_address_widget.dart';
+
 import 'package:carx/data/model/car.dart';
-import 'package:carx/data/model/user.dart';
+import 'package:carx/data/model/delivery_address.dart';
+
 import 'package:carx/data/features/order/bloc/order_bloc.dart';
 import 'package:carx/data/features/order/bloc/order_event.dart';
 import 'package:carx/data/features/order/bloc/order_state.dart';
 import 'package:carx/data/reponsitories/auth/auth_reponsitory_impl.dart';
 import 'package:carx/loading/loading.dart';
-import 'package:carx/loading/loading_order/loading_screen_order.dart';
-
-import 'package:carx/service/auth/firebase_auth_provider.dart';
+import 'package:carx/utilities/app_colors.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,7 +19,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
 class OrderView extends StatefulWidget {
   const OrderView({super.key});
@@ -32,22 +32,12 @@ class _OrderViewState extends State<OrderView> {
   Widget build(BuildContext context) {
     final Car car = ModalRoute.of(context)!.settings.arguments as Car;
 
-    return MultiProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => OrderBloc()
-            ..add(DeliveryUpdated(5))
-            ..add(CarUpdated(car))
-            ..add(PriceUpdated(car.price)),
-        ),
-        BlocProvider(
-            create: (context) => UserBloc(
-                  AuthReponsitoryImpl.reponsitory(),
-                  FirebaseAuthProvider(),
-                )..add(
-                    FetchUser(),
-                  )),
-      ],
+    return BlocProvider(
+      create: (context) => OrderBloc(AuthReponsitoryImpl.reponsitory())
+        ..add(FetchDeliveryAddressOrderEvent())
+        ..add(DeliveryUpdated(5))
+        ..add(CarUpdated(car))
+        ..add(PriceUpdated(car.price)),
       child: BlocConsumer<OrderBloc, OrderState>(
         listener: (context, state) {
           if (state.isLoading) {
@@ -110,16 +100,16 @@ class _OrderViewState extends State<OrderView> {
                           .add(OrderButtonClicked(context));
                     },
                     style: TextButton.styleFrom(
-                      backgroundColor: Colors.amber[100],
+                      backgroundColor: AppColors.primary,
                       fixedSize: const Size(130, 48),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0)),
-                      side: const BorderSide(width: 1, color: Colors.amber),
+                      side: const BorderSide(width: 1, color: AppColors.lightGray),
                     ),
                     child: const Text(
                       'Continues',
                       style: TextStyle(
-                          color: Colors.black,
+                          color: AppColors.secondary,
                           fontWeight: FontWeight.w500,
                           fontSize: 16),
                     ),
@@ -141,84 +131,101 @@ class _OrderViewState extends State<OrderView> {
                         padding: const EdgeInsets.all(12),
                         child: Column(
                           children: [
-                            BlocBuilder<UserBloc, UserState>(
+                            BlocBuilder<OrderBloc, OrderState>(
                               builder: (context, state) {
-                                if (state is UserLoading) {
+                                if (state.deliveryAddressStatus ==
+                                    FetchDeliveryAddressStatus.loading) {
                                   return const CircularProgressIndicator();
-                                } else if (state is UserSuccess) {
-                                  User user = state.user;
-                                  context
-                                      .read<OrderBloc>()
-                                      .add(AddressUpdated(user.address));
-                                  return Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.center,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    mainAxisSize: MainAxisSize.max,
-                                    children: [
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              '${user.name}',
-                                              style: const TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                            const SizedBox(height: 4),
-                                            Text(
-                                              '${user.address}',
-                                              overflow: TextOverflow.ellipsis,
-                                              style: const TextStyle(
-                                                fontSize: 14,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 4),
-                                            Row(
-                                              children: [
-                                                const Text(
-                                                  'Mobile: ',
-                                                  style: TextStyle(
+                                } else if (state.deliveryAddressStatus ==
+                                    FetchDeliveryAddressStatus.success) {
+                                  DeliveryAddress? deliveryAddress =
+                                      state.deliveryAddress;
+                                  if (deliveryAddress == null) {
+                                    return const Text(
+                                      'No delivery address yet',
+                                      style: TextStyle(
+                                          fontSize: 16,
+                                          color: AppColors.secondary,
+                                          fontWeight: FontWeight.w500),
+                                    );
+                                  } else {
+                                    return Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      mainAxisSize: MainAxisSize.max,
+                                      children: [
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                deliveryAddress.recipientName ??
+                                                    'Default',
+                                                style: const TextStyle(
                                                     fontSize: 16,
-                                                  ),
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                              const SizedBox(height: 4),
+                                              Text(
+                                                deliveryAddress.address ??
+                                                    'Default',
+                                                overflow: TextOverflow.ellipsis,
+                                                style: const TextStyle(
+                                                  fontSize: 14,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                 ),
-                                                Text(
-                                                  '${user.phone}',
-                                                  style: const TextStyle(
+                                              ),
+                                              const SizedBox(height: 4),
+                                              Row(
+                                                children: [
+                                                  const Text(
+                                                    'Mobile: ',
+                                                    style: TextStyle(
                                                       fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    deliveryAddress.phone ??
+                                                        'Default',
+                                                    style: const TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(6),
-                                          border: Border.all(
-                                              width: 1, color: Colors.blue),
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            border: Border.all(
+                                                width: 1,
+                                                color: AppColors.lightGray),
+                                          ),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8, vertical: 4),
+                                          child: Text(
+                                            deliveryAddress.type ?? 'Default',
+                                            style: const TextStyle(
+                                                fontSize: 14,
+                                                color: AppColors.fontColor,
+                                                fontWeight: FontWeight.w500),
+                                          ),
                                         ),
-                                        padding: const EdgeInsets.all(6),
-                                        margin: const EdgeInsets.only(left: 12),
-                                        child: const Text(
-                                          'My Address',
-                                          style: TextStyle(
-                                              fontSize: 14, color: Colors.blue),
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                } else if (state is UserFailure) {
-                                  return Text(state.error);
-                                } else
-                                  return SizedBox();
+                                      ],
+                                    );
+                                  }
+                                } else if (state.deliveryAddressStatus ==
+                                    FetchDeliveryAddressStatus.failure) {
+                                  return const Text('Error fetch data');
+                                }
+                                return Container();
                               },
                             ),
                             const SizedBox(height: 16),
@@ -228,7 +235,27 @@ class _OrderViewState extends State<OrderView> {
                               margin:
                                   const EdgeInsets.symmetric(horizontal: 12),
                               child: TextButton(
-                                onPressed: () {},
+                                onPressed: () async {
+                                  final result = await showModalBottomSheet(
+                                    context: context,
+                                    isDismissible: true,
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(24),
+                                          topRight: Radius.circular(24)),
+                                    ),
+                                    enableDrag: true,
+                                    builder: (context) {
+                                      return selectAddressWidget(
+                                          context, state.deliveryAddress);
+                                    },
+                                  );
+                                  if (result is DeliveryAddress) {
+                                    context.read<OrderBloc>().add(
+                                        UpdateDeliveryAddressOrderEvent(
+                                            deliveryAddress: result));
+                                  }
+                                },
                                 style: TextButton.styleFrom(
                                     side: const BorderSide(
                                         width: 1, color: Colors.black)),
@@ -261,11 +288,9 @@ class _OrderViewState extends State<OrderView> {
                                   BorderRadius.all(Radius.circular(12)),
                               color: Color(0xffe0e3e7),
                             ),
-                            padding: EdgeInsets.all(4),
-                            child: FadeInImage(
-                              placeholder: const AssetImage(
-                                  'assets/images/xcar-full-black.png'),
-                              image: NetworkImage(car.image),
+                            padding: const EdgeInsets.all(4),
+                            child: CachedNetworkImage(
+                              imageUrl: car.image,
                               height: 105,
                               width: 105,
                               fit: BoxFit.contain,
@@ -332,8 +357,8 @@ class _OrderViewState extends State<OrderView> {
                                 },
                                 label: Text(
                                   state.startTime == null
-                                      ? 'Chọn ngày giờ'
-                                      : DateFormat('dd/MM/yyyy HH:mm')
+                                      ? 'Choose Time'
+                                      : DateFormat('dd-MM-yyyy HH:mm')
                                           .format(state.startTime!),
                                   style: const TextStyle(
                                       fontSize: 16,
@@ -363,8 +388,8 @@ class _OrderViewState extends State<OrderView> {
                                 },
                                 label: Text(
                                   state.endTime == null
-                                      ? 'Chọn ngày giờ'
-                                      : DateFormat('dd/MM/yyyy HH:mm')
+                                      ? 'Choose Time'
+                                      : DateFormat('dd-MM-yyyy HH:mm')
                                           .format(state.endTime!),
                                   style: const TextStyle(
                                       fontSize: 16,

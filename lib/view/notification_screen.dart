@@ -12,8 +12,8 @@ class NotificationScreeen extends StatelessWidget {
       body: Center(
         child: Image.asset(
           'assets/images/no-notify.png',
-          width: MediaQuery.of(context).size.width / 1.5,
-          height: MediaQuery.of(context).size.width / 1.5,
+          width: 166,
+          height: 166,
         ),
       ),
     );

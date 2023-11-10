@@ -1,5 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carx/utilities/app_routes.dart';
-import 'package:carx/utils/navigation_controller.dart';
+import 'package:carx/utilities/navigation_controller.dart';
 import 'package:carx/data/model/brand.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -29,21 +30,11 @@ class ItemCategory extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(999)),
                 color: Color(0xffe5e5e5)),
             padding: const EdgeInsets.all(12),
-            child: FadeInImage(
-              placeholder:
-                  const AssetImage('assets/images/xcar-full-black.png'),
-              image: NetworkImage(brand.image),
+            child: CachedNetworkImage(
+              imageUrl: brand.image,
               width: 32,
               height: 32,
               fit: BoxFit.contain,
-              imageErrorBuilder: (context, error, stackTrace) {
-                return Image.asset(
-                  'assets/images/xcar-full-black.png',
-                  width: 32,
-                  height: 32,
-                  fit: BoxFit.contain,
-                );
-              },
             ),
           ),
         ),

@@ -15,7 +15,8 @@ class SearchResultEmptyWidget extends StatelessWidget {
           children: [
             SvgPicture.asset(
               'assets/svg/not_found.svg',
-              height: 160,
+              height: 166,
+              width: 166,
               fit: BoxFit.contain,
             ),
             const Padding(

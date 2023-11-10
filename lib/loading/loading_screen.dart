@@ -1,8 +1,9 @@
 import 'dart:async';
 
-
 import 'package:carx/loading/loading_screen_controller.dart';
+import 'package:carx/utilities/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LoadingScreen {
   factory LoadingScreen() => _screen;
@@ -45,9 +46,9 @@ class LoadingScreen {
           child: Center(
             child: Container(
               constraints: BoxConstraints(
-                  maxWidth: size.width * 0.8,
+                  maxWidth: size.width * 0.6,
                   maxHeight: size.height * 0.8,
-                  minWidth: size.width * 0.5),
+                  minWidth: size.width * 0.4),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(10.0),
@@ -60,7 +61,10 @@ class LoadingScreen {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const SizedBox(height: 10),
-                      const CircularProgressIndicator(),
+                      const SpinKitCircle(
+                        color: AppColors.primary,
+                        size: 50,
+                      ),
                       const SizedBox(height: 20),
                       StreamBuilder(
                         stream: _text.stream,

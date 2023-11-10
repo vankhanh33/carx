@@ -27,7 +27,7 @@ class ShimmerLoadCar extends StatelessWidget {
                   baseColor: Colors.grey.withOpacity(0.5),
                   highlightColor: Colors.grey,
                   child: Image.asset(
-                    'assets/images/xcar-full-black.png',
+                    'assets/images/logo-dark.png',
                     height: 150,
                     fit: BoxFit.contain,
                   ),
