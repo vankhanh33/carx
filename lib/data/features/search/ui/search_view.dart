@@ -1,5 +1,6 @@
 import 'package:carx/components/shimmer_load_car.dart';
 import 'package:carx/data/features/search/ui/search_result_empty.dart';
+import 'package:carx/data/reponsitories/car/car_reponsitory_impl.dart';
 import 'package:carx/utilities/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,7 +9,7 @@ import 'package:carx/data/model/car.dart';
 import 'package:carx/data/features/search/bloc/search_bloc.dart';
 import 'package:carx/data/features/search/bloc/search_event.dart';
 import 'package:carx/data/features/search/bloc/search_state.dart';
-import 'package:carx/data/reponsitories/car_reponsitory.dart';
+
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class SearchView extends StatefulWidget {
@@ -25,7 +26,7 @@ class _SearchViewState extends State<SearchView> {
   @override
   void initState() {
     _searchTextController = TextEditingController();
-    bloc = SearchBloc(CarReponsitory.response());
+    bloc = SearchBloc(CarReponsitoryImpl.response());
     bloc.add(FetchCarsSearchEvent());
     super.initState();
   }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:carx/data/model/delivery_address.dart';
 import 'package:carx/data/model/dio_response.dart';
 import 'package:carx/utilities/api_constants.dart';
 import 'package:carx/service/auth/auth_exceptions.dart';
@@ -30,11 +31,11 @@ class AuthReponsitoryImpl implements AuthReponsitory {
 
       final userJson = user.toJson();
 
-      final reponse = await _dio.post(
+      final response = await _dio.post(
         REGISTER,
         data: FormData.fromMap(userJson),
       );
-      if (reponse.statusCode != 200) {
+      if (response.statusCode != 200) {
         throw GenericAuthException();
       }
     } catch (e) {
@@ -45,18 +46,18 @@ class AuthReponsitoryImpl implements AuthReponsitory {
   @override
   Future<User> fetUserById(String uId) async {
     try {
-      final reponse = await _dio.post(
+      final response = await _dio.post(
         FETCH_USER_BY_ID,
         data: FormData.fromMap({'id': uId}),
       );
-      if (reponse.statusCode == 200) {
-        DioReponse dioResponse = DioReponse.fromJson(jsonDecode(reponse.data));
+      if (response.statusCode == 200) {
+        DioReponse dioReponse = DioReponse.fromJson(jsonDecode(response.data));
 
-        if (dioResponse.status == 'OK') {
-          final User user = User.fromJson(dioResponse.data);
+        if (dioReponse.status == 'OK') {
+          final User user = User.fromJson(dioReponse.data);
           return user;
         } else {
-          throw Exception('Not found user');
+          return User();
         }
       } else {
         throw Exception('Error');
@@ -74,9 +75,97 @@ class AuthReponsitoryImpl implements AuthReponsitory {
         UPDATE_USER_INFO,
         data: FormData.fromMap(userMap),
       );
-      if(response.statusCode == 200){
+      if (response.statusCode == 200) {
         print('Success ${response.data}');
-      }else{
+      } else {
+        print('Failled');
+      }
+    } catch (e) {
+      throw (Exception('Error'));
+    }
+  }
+
+  @override
+  Future<DeliveryAddress?> fetchDeliveryAddressDefault(String uId) async {
+    try {
+      final response = await _dio.post(
+        FETCH_DELIVERY_ADDRESS_SELECTED,
+        data: FormData.fromMap({'user_id': uId}),
+      );
+      if (response.statusCode == 200) {
+        DioReponse dioReponse = DioReponse.fromJson(jsonDecode(response.data));
+
+        if (dioReponse.status == 'OK' && dioReponse.data != null) {
+          final DeliveryAddress deliveryAddress =
+              DeliveryAddress.fromJson(dioReponse.data);
+          return deliveryAddress;
+        } else {
+          return null;
+        }
+      } else {
+        throw Exception('Error');
+      }
+    } catch (e) {
+      throw Exception('Error Sever');
+    }
+  }
+
+  @override
+  Future<List<DeliveryAddress>> fetchDeliveryAddresses(String uId) async {
+    try {
+      final response = await _dio.post(
+        FETCH_DELIVERY_ADDRESSES,
+        data: FormData.fromMap({'user_id': uId}),
+      );
+      if (response.statusCode == 200) {
+        DioReponse dioReponse = DioReponse.fromJson(jsonDecode(response.data));
+
+        if (dioReponse.status == 'OK') {
+          List<dynamic> reponseData = dioReponse.data;
+          List<DeliveryAddress> deliveryAddress = reponseData
+              .map((data) => DeliveryAddress.fromJson(data))
+              .toList();
+
+          return deliveryAddress;
+        } else {
+          return [];
+        }
+      } else {
+        throw Exception('Error request exception');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch cars: $e');
+    }
+  }
+
+  @override
+  Future<void> addDeliveryAddress(
+      String uId, DeliveryAddress deliveryAddress) async {
+    try {
+      final response = await _dio.post(
+        ADD_ADDRESS,
+        data: FormData.fromMap(deliveryAddress.toJson()),
+      );
+      if (response.statusCode == 200) {
+        print('Success ${response.data}');
+      } else {
+        print('Failled');
+      }
+    } catch (e) {
+      throw (Exception('Error'));
+    }
+  }
+
+  @override
+  Future<void> deleteDeliveryAddress(String id) async {
+    try {
+      final response = await _dio.post(
+        DELETE_ADDRESS,
+        data: FormData.fromMap({'id': id}),
+      );
+      if (response.statusCode == 200) {
+        print('Success ${response.data}');
+      } else {
         print('Failled');
       }
     } catch (e) {

@@ -6,9 +6,9 @@ import 'package:carx/data/features/edit_profile/bloc/edit_profile_event.dart';
 import 'package:carx/data/features/edit_profile/bloc/edit_profile_state.dart';
 import 'package:carx/data/reponsitories/auth/auth_reponsitory_impl.dart';
 import 'package:carx/loading/loading.dart';
-import 'package:carx/loading/loading_order/loading_screen_order.dart';
+
 import 'package:carx/utilities/app_colors.dart';
-import 'package:carx/utilities/app_routes.dart';
+
 import 'package:carx/utilities/dialog/save_profile_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,6 +30,12 @@ class EditProfileScreenState extends State<EditProfileScreen> {
     profileBloc = EditProfileBloc(AuthReponsitoryImpl.reponsitory());
     profileBloc.add(FetchUserEvent());
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    profileBloc.close();
   }
 
   @override

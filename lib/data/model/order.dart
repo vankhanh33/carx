@@ -1,4 +1,10 @@
-class Order {
+
+
+// ignore_for_file: must_be_immutable
+
+import 'package:equatable/equatable.dart';
+
+class Order extends Equatable {
   String? id;
   String? code;
   String? status;
@@ -12,27 +18,23 @@ class Order {
   String? discountAmount;
   String? carId;
   String? userId;
+  String? addressId;
 
-  Order({
-    this.id,
-    this.code,
-    this.status,
-    this.amount,
-    this.totalAmount,
-    this.deliveryCharges,
-    this.startTime,
-    this.endTime,
-    this.paymentstatus,
-    this.paymentMethods,
-    this.discountAmount,
-    this.carId,
-    this.userId,
-  });
-
-  @override
-  String toString() {
-    return '$code - $status - $totalAmount - $amount - $deliveryCharges - $startTime - $endTime - $paymentMethods - $paymentstatus - $carId - $userId';
-  }
+  Order(
+      {this.id,
+      this.code,
+      this.status,
+      this.amount,
+      this.totalAmount,
+      this.deliveryCharges,
+      this.startTime,
+      this.endTime,
+      this.paymentstatus,
+      this.paymentMethods,
+      this.discountAmount,
+      this.carId,
+      this.userId,
+      this.addressId});
 
   Order copyWith({
     String? id,
@@ -48,22 +50,23 @@ class Order {
     String? discountAmount,
     String? carId,
     String? userId,
+    String? addressId,
   }) =>
       Order(
-        id: id ?? this.id,
-        code: code ?? this.code,
-        status: status ?? this.status,
-        amount: amount ?? this.amount,
-        totalAmount: totalAmount ?? this.totalAmount,
-        deliveryCharges: deliveryCharges ?? this.deliveryCharges,
-        startTime: startTime ?? this.startTime,
-        endTime: endTime ?? this.endTime,
-        paymentstatus: paymentstatus ?? this.paymentstatus,
-        paymentMethods: paymentMethods ?? this.paymentMethods,
-        discountAmount: discountAmount ?? this.discountAmount,
-        carId: carId ?? this.carId,
-        userId: userId ?? this.userId,
-      );
+          id: id ?? this.id,
+          code: code ?? this.code,
+          status: status ?? this.status,
+          amount: amount ?? this.amount,
+          totalAmount: totalAmount ?? this.totalAmount,
+          deliveryCharges: deliveryCharges ?? this.deliveryCharges,
+          startTime: startTime ?? this.startTime,
+          endTime: endTime ?? this.endTime,
+          paymentstatus: paymentstatus ?? this.paymentstatus,
+          paymentMethods: paymentMethods ?? this.paymentMethods,
+          discountAmount: discountAmount ?? this.discountAmount,
+          carId: carId ?? this.carId,
+          userId: userId ?? this.userId,
+          addressId: addressId ?? this.addressId);
 
   Order.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -79,6 +82,7 @@ class Order {
     discountAmount = json['discount_amount'];
     carId = json['car_id '];
     userId = json['user_id '];
+    addressId = json['address_id'];
   }
 
   Map<String, dynamic> toJson() {
@@ -96,7 +100,26 @@ class Order {
     data['car_id'] = carId!;
     data['user_id'] = userId;
     data['discount_amount'] = discountAmount ?? '0';
+    data['address_id'] = addressId;
 
     return data;
   }
+
+  @override
+  List<Object?> get props => [
+        id,
+        code,
+        status,
+        amount,
+        totalAmount,
+        deliveryCharges,
+        startTime,
+        endTime,
+        paymentstatus,
+        paymentMethods,
+        discountAmount,
+        carId,
+        userId,
+        addressId
+      ];
 }

@@ -1,6 +1,6 @@
-import 'package:carx/bloc/auth/auth_bloc.dart';
-import 'package:carx/bloc/auth/auth_event.dart';
-import 'package:carx/bloc/auth/auth_state.dart';
+import 'package:carx/view/login/bloc/auth_bloc.dart';
+import 'package:carx/view/login/bloc/auth_event.dart';
+import 'package:carx/view/login/bloc/auth_state.dart';
 
 import 'package:carx/service/auth/auth_exceptions.dart';
 import 'package:carx/utilities/app_colors.dart';

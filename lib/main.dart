@@ -1,14 +1,14 @@
 // ignore_for_file: prefer_const_constructors, deprecated_member_use
 
-import 'package:carx/bloc/auth/auth_bloc.dart';
-import 'package:carx/bloc/auth/auth_event.dart';
-import 'package:carx/bloc/auth/auth_state.dart';
+import 'package:carx/view/login/bloc/auth_bloc.dart';
+import 'package:carx/view/login/bloc/auth_event.dart';
+import 'package:carx/view/login/bloc/auth_state.dart';
 import 'package:carx/firebase_options.dart';
 import 'package:carx/loading/loading_screen.dart';
 import 'package:carx/service/auth/firebase_auth_provider.dart';
 import 'package:carx/utilities/app_colors.dart';
 import 'package:carx/utilities/app_routes.dart';
-import 'package:carx/utils/notification/firebase_messaging_service.dart';
+import 'package:carx/utilities/notification/firebase_messaging_service.dart';
 import 'package:carx/view/login/login_view.dart';
 
 import 'package:carx/view/login/register.dart';

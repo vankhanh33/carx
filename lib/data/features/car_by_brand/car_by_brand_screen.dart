@@ -3,7 +3,8 @@ import 'package:carx/data/features/car_by_brand/bloc/car_by_brand_event.dart';
 import 'package:carx/data/features/car_by_brand/bloc/car_by_brand_state.dart';
 
 import 'package:carx/data/model/brand.dart';
-import 'package:carx/data/reponsitories/car_reponsitory.dart';
+
+import 'package:carx/data/reponsitories/car/car_reponsitory_impl.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,7 +25,7 @@ class CarByBrandScreen extends StatelessWidget {
         title: Text(brand.name),
       ),
       body: BlocProvider(
-        create: (context) => CarByBrandBloc(CarReponsitory.response())
+        create: (context) => CarByBrandBloc(CarReponsitoryImpl.response())
           ..add(FetchCarsByBrand(brandId: brand.id!)),
         child: BlocBuilder<CarByBrandBloc, CarByBrandState>(
           builder: (context, state) {

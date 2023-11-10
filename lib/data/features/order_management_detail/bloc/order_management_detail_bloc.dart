@@ -1,4 +1,6 @@
-import 'package:carx/data/reponsitories/api/order_reponsitory.dart';
+
+import 'package:carx/data/reponsitories/order/order_reponsitory.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'order_management_detail_event.dart';
@@ -6,20 +8,23 @@ import 'order_management_detail_state.dart';
 
 class OrderManagementDetailBloc
     extends Bloc<OrderManagementDetailEvent, OrderManagementDetailState> {
-  OrderManagementDetailBloc(OrderReponsitory reponsitory)
-      : super(OrderManagementDetailInitialState()) {
+  OrderManagementDetailBloc(
+    OrderReponsitory reponsitory,
+ 
+  ) : super(InitialOrderManagementDetailState()) {
     on<OrderCancellationEvent>(
       (event, emit) async {
-        emit(CancelOrderLoadingState());
+        emit(OrderLoadingCancelState());
         try {
           await reponsitory.updateOrder(
             order: event.order,
             status: 'Cancelled',
           );
-          emit(CancelledOrderSuccessState());
+          emit(OrderCancelledSuccessState());
         } catch (e) {
-          emit(CancelOrderFailureState(messageError: e.toString()));
+          emit(OrderCancelledFailureState());
         }
+         emit(InitialOrderManagementDetailState());
       },
     );
   }

@@ -10,7 +10,7 @@ class User extends Equatable {
   final String? email;
   final String? phone;
   final String? image;
-  final String? address;
+  late final String? address;
   final String? gender;
   final String? token;
 

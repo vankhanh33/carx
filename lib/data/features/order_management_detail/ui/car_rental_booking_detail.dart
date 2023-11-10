@@ -1,23 +1,24 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carx/bloc/user/user_bloc.dart';
-import 'package:carx/bloc/user/user_event.dart';
-import 'package:carx/bloc/user/user_state.dart';
+
 import 'package:carx/data/features/order_management_detail/bloc/order_management_detail_bloc.dart';
 import 'package:carx/data/features/order_management_detail/bloc/order_management_detail_event.dart';
 import 'package:carx/data/features/order_management_detail/bloc/order_management_detail_state.dart';
 import 'package:carx/data/model/brand.dart';
 
 import 'package:carx/data/model/car.dart';
+import 'package:carx/data/model/delivery_address.dart';
 import 'package:carx/data/model/order.dart';
 import 'package:carx/data/model/order_management.dart';
-import 'package:carx/data/reponsitories/api/order_reponsitory.dart';
-import 'package:carx/data/reponsitories/auth/auth_reponsitory_impl.dart';
+
+import 'package:carx/data/reponsitories/order/order_reponsitory_impl.dart';
+import 'package:carx/loading/loading.dart';
 
 import 'package:carx/loading/loading_screen.dart';
-import 'package:carx/service/auth/firebase_auth_provider.dart';
-import 'package:carx/utilities/app_routes.dart';
+
+import 'package:carx/utilities/app_colors.dart';
+
 import 'package:carx/utilities/dialog/cancel_order_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -37,8 +38,15 @@ class _CarRentalBookingDetailState extends State<CarRentalBookingDetail> {
   late Car car;
   late Brand brand;
   late Order order;
+  late DeliveryAddress deliveryAddress;
   late CountdownTimerController countdownController;
   late int endTime;
+
+  @override
+  void dispose() {
+    countdownController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +55,7 @@ class _CarRentalBookingDetailState extends State<CarRentalBookingDetail> {
     car = orderManagement.car;
     brand = orderManagement.brand;
     order = orderManagement.order;
+    deliveryAddress = orderManagement.deliveryAddress;
     endTime = DateTime.parse(order.endTime!).millisecondsSinceEpoch;
     countdownController = CountdownTimerController(endTime: endTime);
 
@@ -59,18 +68,10 @@ class _CarRentalBookingDetailState extends State<CarRentalBookingDetail> {
           Navigator.pop(context, false);
           return false;
         },
-        child: MultiBlocProvider(
-          providers: [
-            BlocProvider(
-              create: (context) =>
-                  OrderManagementDetailBloc(OrderReponsitory.response()),
-            ),
-            BlocProvider(
-              create: (context) => UserBloc(
-                  AuthReponsitoryImpl.reponsitory(), FirebaseAuthProvider())
-                ..add(FetchUser()),
-            )
-          ],
+        child: BlocProvider(
+          create: (context) => OrderManagementDetailBloc(
+            OrderReponsitoryImpl.response(),
+          ),
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -157,10 +158,8 @@ class _CarRentalBookingDetailState extends State<CarRentalBookingDetail> {
                       Container(
                         decoration: const BoxDecoration(),
                         padding: const EdgeInsets.all(4),
-                        child: FadeInImage(
-                          placeholder: const AssetImage(
-                              'assets/images/xcar-full-black.png'),
-                          image: NetworkImage(car.image),
+                        child: CachedNetworkImage(
+                          imageUrl: car.image,
                           height: 64,
                           width: 64,
                           fit: BoxFit.contain,
@@ -184,11 +183,15 @@ class _CarRentalBookingDetailState extends State<CarRentalBookingDetail> {
                           ],
                           style: const TextStyle(
                               fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.grey),
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.primary),
                         ),
                       ),
-                      const Icon(Icons.share_outlined),
+                      const Icon(
+                        Icons.share_outlined,
+                        size: 20,
+                        color: AppColors.primary,
+                      ),
                     ],
                   ),
                 ),
@@ -207,66 +210,62 @@ class _CarRentalBookingDetailState extends State<CarRentalBookingDetail> {
                   color: const Color(0xffe0e3e7),
                   child: const Text(
                     'Shipping Details',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.primary),
                   ),
                 ),
-                BlocBuilder<UserBloc, UserState>(
-                  builder: (context, state) {
-                    if (state is UserLoading) {
-                      return const CircularProgressIndicator();
-                    } else if (state is UserSuccess) {
-                      return Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Text(
-                              state.user.name!,
-                              style: const TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w500),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              state.user.address!,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontSize: 14,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Row(
-                              children: [
-                                const Text(
-                                  'Mobile: ',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                Text(
-                                  state.user.phone!,
-                                  style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                              ],
-                            ),
-                          ],
+                Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Text(
+                        deliveryAddress.recipientName ?? 'Default',
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w500),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        deliveryAddress.address ?? 'Default',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      );
-                    }
-                    return Container();
-                  },
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          const Text(
+                            'Mobile: ',
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                          Text(
+                            deliveryAddress.phone ?? 'Default',
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 Container(
                   width: double.infinity,
-                  padding: EdgeInsets.all(12),
-                  color: Color(0xffe0e3e7),
+                  padding: const EdgeInsets.all(12),
+                  color: AppColors.lightGray,
                   child: const Text(
                     'Rental Period',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.primary),
                   ),
                 ),
                 Container(
@@ -313,7 +312,10 @@ class _CarRentalBookingDetailState extends State<CarRentalBookingDetail> {
                   color: Color(0xffe0e3e7),
                   child: const Text(
                     'Payment Details',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: AppColors.primary),
                   ),
                 ),
                 Container(
@@ -446,12 +448,18 @@ class _CarRentalBookingDetailState extends State<CarRentalBookingDetail> {
                           child: BlocConsumer<OrderManagementDetailBloc,
                               OrderManagementDetailState>(
                             listener: (context, state) {
-                              if (state is CancelOrderLoadingState) {
-                                LoadingScreen()
-                                    .show(context: context, text: '');
-                              } else if (state is CancelledOrderSuccessState) {
-                                LoadingScreen().hide();
+                              if (state is OrderLoadingCancelState) {
+                                Loading()
+                                    .show(context: context);
+                              } else if (state is OrderCancelledSuccessState) {
+                                Loading().hide();
                                 Navigator.pop(context, true);
+                              } else if (state is OrderCancelledFailureState) {
+                                Loading().hide();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            'Cannot cancel due to error')));
                               }
                             },
                             builder: (context, state) {

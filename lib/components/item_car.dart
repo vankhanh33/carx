@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carx/data/model/car.dart';
-import 'package:carx/data/features/car_detail/ui/detail_screen.dart';
+
 import 'package:carx/utilities/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
@@ -41,7 +41,7 @@ class ItemCar extends StatelessWidget {
                   fit: BoxFit.contain,
                   errorWidget: (context, url, error) {
                     return Image.asset(
-                      'assets/images/xcar-full-black.png',
+                      'assets/images/logo-dark.png',
                       height: 150,
                       fit: BoxFit.contain,
                     );
@@ -93,7 +93,7 @@ class ItemCar extends StatelessWidget {
       baseColor: Colors.grey.withOpacity(0.5),
       highlightColor: Colors.grey,
       child: Image.asset(
-        'assets/images/xcar-full-black.png',
+        'assets/images/logo-dark.png',
         height: 150,
         fit: BoxFit.contain,
       ),

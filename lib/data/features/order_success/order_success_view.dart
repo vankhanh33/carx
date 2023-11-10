@@ -1,17 +1,15 @@
-import 'package:carx/bloc/user/user_bloc.dart';
-import 'package:carx/bloc/user/user_event.dart';
-import 'package:carx/bloc/user/user_state.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:carx/data/model/car.dart';
+import 'package:carx/data/model/delivery_address.dart';
 import 'package:carx/data/model/order.dart';
 import 'package:carx/data/features/order_success/reviews_success_widget.dart';
-import 'package:carx/data/features/order_success/slide_bottom_route.dart';
 
-import 'package:carx/data/reponsitories/auth/auth_reponsitory_impl.dart';
-import 'package:carx/service/auth/firebase_auth_provider.dart';
+
 import 'package:carx/utilities/app_routes.dart';
-import 'package:carx/view/main_view.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 
@@ -58,6 +56,7 @@ class _OrderSucessState extends State<OrderSucess>
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     Order order = arguments['order'];
     Car car = arguments['car'];
+    DeliveryAddress deliveryAddress = arguments['address'];
     return Scaffold(
       body: FutureBuilder(
           future: Future.delayed(const Duration(seconds: 5)),
@@ -66,7 +65,7 @@ class _OrderSucessState extends State<OrderSucess>
               _animationController.forward();
               return SlideTransition(
                 position: _slideAnimation,
-                child: widgetMain(context, order, car),
+                child: widgetMain(context, order, car, deliveryAddress),
               );
             } else {
               return const ReviewSuccessWidget();
@@ -75,7 +74,8 @@ class _OrderSucessState extends State<OrderSucess>
     );
   }
 
-  Widget widgetMain(BuildContext context, Order order, Car car) {
+  Widget widgetMain(BuildContext context, Order order, Car car,
+      DeliveryAddress deliveryAddress) {
     return SizedBox(
       height: MediaQuery.of(context).size.height,
       width: double.infinity,
@@ -91,8 +91,9 @@ class _OrderSucessState extends State<OrderSucess>
                   Align(
                     alignment: Alignment.topRight,
                     child: InkWell(
-                      onTap: () =>
-                          Navigator.of(context).pushNamedAndRemoveUntil(Routes.routeMain,(route) => false),
+                      onTap: () => Navigator.of(context)
+                          .pushNamedAndRemoveUntil(
+                              Routes.routeMain, (route) => false),
                       child: Container(
                         width: 36,
                         height: 36,
@@ -199,10 +200,8 @@ class _OrderSucessState extends State<OrderSucess>
                             color: Colors.white,
                           ),
                           padding: EdgeInsets.all(4),
-                          child: FadeInImage(
-                            placeholder: const AssetImage(
-                                'assets/images/xcar-full-black.png'),
-                            image: NetworkImage(car.image),
+                          child: CachedNetworkImage(
+                            imageUrl: car.image,
                             height: 72,
                             width: 72,
                             fit: BoxFit.contain,
@@ -240,57 +239,45 @@ class _OrderSucessState extends State<OrderSucess>
               ),
             ),
           ),
-          BlocBuilder<UserBloc, UserState>(
-            bloc: UserBloc(
-                AuthReponsitoryImpl.reponsitory(), FirebaseAuthProvider())
-              ..add(FetchUser()),
-            builder: (context, state) {
-              if (state is UserLoading) {
-                return const CircularProgressIndicator();
-              } else if (state is UserSuccess) {
-                return Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Text(
-                        state.user.name!,
-                        style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w500),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        state.user.address!,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Row(
-                        children: [
-                          const Text(
-                            'Mobile: ',
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
-                          ),
-                          Text(
-                            state.user.phone!,
-                            style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w500),
-                          ),
-                        ],
-                      ),
-                    ],
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Text(
+                  deliveryAddress.recipientName ?? 'Default',
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  deliveryAddress.address ?? 'Default',
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                );
-              }
-              return Container();
-            },
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    const Text(
+                      'Mobile: ',
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                    Text(
+                      deliveryAddress.phone ?? 'Default',
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
           const Divider(
             height: 24,
@@ -322,7 +309,8 @@ class _OrderSucessState extends State<OrderSucess>
                   padding: const EdgeInsets.all(16),
                   child: TextButton.icon(
                     onPressed: () {
-                       Navigator.of(context).pushNamedAndRemoveUntil(Routes.routeMain,(route) => false);
+                      Navigator.of(context).pushNamedAndRemoveUntil(
+                          Routes.routeMain, (route) => false);
                     },
                     icon: SvgPicture.asset('assets/svg/home.svg', width: 24),
                     label: const Text(

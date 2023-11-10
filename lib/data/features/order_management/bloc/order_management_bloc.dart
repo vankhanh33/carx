@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:carx/data/features/order_management/bloc/order_management_event.dart';
 import 'package:carx/data/features/order_management/bloc/order_management_state.dart';
 
-import 'package:carx/data/reponsitories/api/order_reponsitory.dart';
+import 'package:carx/data/reponsitories/order/order_reponsitory.dart';
 import 'package:carx/service/auth/auth_provider.dart';
 
 class OrderManagementBloc
@@ -25,8 +25,14 @@ class OrderManagementBloc
     try {
       final String uId = provider.currentUser!.id;
       final orderManagements = await reponsitory.fetchOrders(uId);
+
+      final orderManagementsByStatus = orderManagements.where((e) {
+        return e.order.status != 'Completed' && e.order.status != 'Cancelled';
+      }).toList();
+
       emit(state.copyWith(
         orderManagements: orderManagements,
+        orderManagementsByStatus: orderManagementsByStatus,
         status: OrderManagementStatus.success,
       ));
     } catch (e) {

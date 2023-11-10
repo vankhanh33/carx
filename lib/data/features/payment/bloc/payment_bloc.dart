@@ -3,7 +3,7 @@
 import 'package:carx/data/model/order.dart';
 import 'package:carx/data/features/payment/bloc/payment_event.dart';
 import 'package:carx/data/features/payment/bloc/payment_state.dart';
-import 'package:carx/data/reponsitories/api/order_reponsitory.dart';
+import 'package:carx/data/reponsitories/order/order_reponsitory.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
@@ -38,7 +38,7 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
     PaymentButtonSelectEvent event,
     Emitter emit,
   ) async {
-    emit(state.copyWith(status: PaymentStatus.loading, isOnClick: true));
+    emit(state.copyWith(status: PaymentStatus.loading));
 
     if (event.paymentMethod.isEmpty) {
       await Future.delayed(const Duration(seconds: 2));
@@ -61,6 +61,6 @@ class PaymentBloc extends Bloc<PaymentEvent, PaymentState> {
       }
     }
 
-    emit(state.copyWith(isOnClick: false));
+   emit(state.copyWith(status: PaymentStatus.initial));
   }
 }

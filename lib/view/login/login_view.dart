@@ -1,6 +1,6 @@
-import 'package:carx/bloc/auth/auth_bloc.dart';
-import 'package:carx/bloc/auth/auth_event.dart';
-import 'package:carx/bloc/auth/auth_state.dart';
+import 'package:carx/view/login/bloc/auth_bloc.dart';
+import 'package:carx/view/login/bloc/auth_event.dart';
+import 'package:carx/view/login/bloc/auth_state.dart';
 import 'package:carx/service/auth/auth_exceptions.dart';
 import 'package:carx/utilities/app_colors.dart';
 import 'package:carx/utilities/dialog/error_dialog.dart';
@@ -62,14 +62,14 @@ class LoginState extends State<LoginView> {
         backgroundColor: const Color.fromARGB(255, 243, 243, 243),
         body: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(12, 48, 12, 12),
+            padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
             child: Column(
               children: [
                 Image.asset(
-                  'assets/images/xcar-195x195-black.png',
-                  fit: BoxFit.cover,
-                  width: 177,
-                  height: 177,
+                   'assets/images/logo-dark.png',
+                  fit: BoxFit.contain,
+                  width: MediaQuery.of(context).size.width/1.5,
+                  height: 200,
                 ),
                 const Text(
                   'SIGN IN \nTO CONTINUE',

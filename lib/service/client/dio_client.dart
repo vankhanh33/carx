@@ -1,3 +1,4 @@
+import 'package:carx/utilities/api_constants.dart';
 import 'package:dio/dio.dart';
 
 class DioClient {
@@ -8,7 +9,7 @@ class DioClient {
       dio = Dio(BaseOptions(
         receiveTimeout: const Duration(seconds: 30),
         connectTimeout: const Duration(seconds: 30),
-        baseUrl: 'https://flexicarrent.000webhostapp.com',
+        baseUrl: HOST,
         contentType: 'application/json',
         responseType: ResponseType.plain,
       ));

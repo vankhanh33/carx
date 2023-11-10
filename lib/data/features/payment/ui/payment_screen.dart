@@ -4,14 +4,17 @@ import 'package:carx/data/model/order.dart';
 import 'package:carx/data/features/payment/bloc/payment_bloc.dart';
 import 'package:carx/data/features/payment/bloc/payment_event.dart';
 import 'package:carx/data/features/payment/bloc/payment_state.dart';
+import 'package:carx/data/reponsitories/order/order_reponsitory_impl.dart';
 
-import 'package:carx/loading/loading_screen.dart';
 import 'package:carx/data/features/order_success/slide_bottom_route.dart';
-import 'package:carx/data/reponsitories/api/order_reponsitory.dart';
+
 import 'package:carx/data/features/order_success/order_success_view.dart';
+import 'package:carx/loading/loading.dart';
+import 'package:carx/utilities/app_colors.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class PaymentSreen extends StatefulWidget {
   const PaymentSreen({super.key});
@@ -28,24 +31,22 @@ class _PaymentSreenState extends State<PaymentSreen> {
     Order order = mapOrder['order'];
 
     return BlocProvider(
-      create: (context) => PaymentBloc(OrderReponsitory.response())
+      create: (context) => PaymentBloc(OrderReponsitoryImpl.response())
         ..add(OrderCarUpdate(order: order)),
       child: BlocConsumer<PaymentBloc, PaymentState>(
         listener: (context, state) {
-          if (state.isOnClick) {
-            if (state.status == PaymentStatus.loading) {
-              LoadingScreen().show(context: context, text: '');
-            } else if (state.status == PaymentStatus.failure) {
-              LoadingScreen().hide();
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text(state.errorText)));
-            } else if (state.status == PaymentStatus.success) {
-              LoadingScreen().hide();
-              Navigator.of(context).push(SlideBottomRoute(
-                page: const OrderSucess(),
-                arguments: mapOrder,
-              ));
-            }
+          if (state.status == PaymentStatus.loading) {
+            Loading().show(context: context);
+          } else if (state.status == PaymentStatus.failure) {
+            Loading().hide();
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text(state.errorText)));
+          } else if (state.status == PaymentStatus.success) {
+            Loading().hide();
+            Navigator.of(context).pushAndRemoveUntil(
+              SlideBottomRoute(page: const OrderSucess(), arguments: mapOrder),
+              (route) => false,
+            );
           }
         },
         builder: (context, state) {
@@ -99,16 +100,17 @@ class _PaymentSreenState extends State<PaymentSreen> {
                           paymentMethod: state.selectedPaymentMethod));
                     },
                     style: TextButton.styleFrom(
-                      backgroundColor: Colors.amber[100],
+                      backgroundColor: AppColors.primary,
                       fixedSize: const Size(130, 48),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0)),
-                      side: const BorderSide(width: 1, color: Colors.amber),
+                      side: const BorderSide(
+                          width: 1, color: AppColors.lightGray),
                     ),
                     child: const Text(
                       'Continues',
                       style: TextStyle(
-                          color: Colors.black,
+                          color: AppColors.secondary,
                           fontWeight: FontWeight.w500,
                           fontSize: 16),
                     ),
@@ -134,23 +136,38 @@ class _PaymentSreenState extends State<PaymentSreen> {
                     ),
                     itemBuilder: (context, index) {
                       return ListTile(
-                        leading: imgBank(context, list.elementAt(index),
-                            state.selectedPaymentMethod),
+                        leading: Container(
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                            color: const Color(0xffe0e3e7),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Image.asset(
+                              banks[index][2],
+                              width: 48,
+                              height: 48,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
                         minVerticalPadding: 0,
-                        title: const Column(
+                        title: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Vietcom Bank',
-                              style: TextStyle(
+                              banks[index][0],
+                              style: const TextStyle(
                                   fontSize: 16, fontWeight: FontWeight.w500),
                             ),
-                            SizedBox(height: 4),
+                            const SizedBox(height: 4),
                             Text(
-                              'XXXX XXXX XXXX 7891 ',
+                              banks[index][1],
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 14,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -160,21 +177,21 @@ class _PaymentSreenState extends State<PaymentSreen> {
                         onTap: () {
                           context.read<PaymentBloc>().add(
                               SelectionPaymentMethodEvent(
-                                  itemSelected: list.elementAt(index)));
+                                  itemSelected: banks[index][0]));
                         },
                         trailing: Radio(
-                          value: list.elementAt(index),
+                          value: banks[index][0],
                           groupValue: state.selectedPaymentMethod,
                           onChanged: (value) {
                             context.read<PaymentBloc>().add(
                                 SelectionPaymentMethodEvent(
-                                    itemSelected: list.elementAt(index)));
+                                    itemSelected: banks[index][0]));
                           },
                         ),
                       );
                     },
                     shrinkWrap: true,
-                    itemCount: 2,
+                    itemCount: banks.length,
                   ),
                   const SizedBox(height: 16),
                   const Padding(
@@ -195,10 +212,14 @@ class _PaymentSreenState extends State<PaymentSreen> {
                         mainAxisExtent: 48,
                       ),
                       itemBuilder: (context, index) {
-                        return imgBank(
-                            context, '$index', state.selectedPaymentMethod);
+                        return imageWallet(
+                          context: context,
+                          assetImage: wallets[index][1],
+                          currentItem: state.selectedPaymentMethod,
+                          item: wallets[index][0],
+                        );
                       },
-                      itemCount: 5,
+                      itemCount: wallets.length,
                     ),
                   ),
                   const SizedBox(height: 32),
@@ -208,11 +229,26 @@ class _PaymentSreenState extends State<PaymentSreen> {
                       onTap: () {
                         context.read<PaymentBloc>().add(
                             SelectionPaymentMethodEvent(
-                                itemSelected: list.elementAt(2)));
+                                itemSelected: 'Cash on delivery'));
                       },
                       minVerticalPadding: 0,
-                      leading: imgBank(context, list.elementAt(2),
-                          state.selectedPaymentMethod),
+                      leading: Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: const Color(0xffe0e3e7),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: SvgPicture.asset(
+                            'assets/svg/cube.svg',
+                            width: 48,
+                            height: 48,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
                       title: const Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -234,12 +270,12 @@ class _PaymentSreenState extends State<PaymentSreen> {
                         ],
                       ),
                       trailing: Radio(
-                        value: list.elementAt(2),
+                        value: 'Cash on delivery',
                         groupValue: state.selectedPaymentMethod,
                         onChanged: (value) {
                           context.read<PaymentBloc>().add(
                               SelectionPaymentMethodEvent(
-                                  itemSelected: list.elementAt(2)));
+                                  itemSelected: 'Cash on delivery'));
                         },
                       ),
                     ),
@@ -362,7 +398,12 @@ class _PaymentSreenState extends State<PaymentSreen> {
     );
   }
 
-  Widget imgBank(BuildContext context, String item, String currentItem) {
+  Widget imageWallet({
+    required BuildContext context,
+    required String item,
+    required String assetImage,
+    required String currentItem,
+  }) {
     return InkWell(
       onTap: () {
         context
@@ -381,11 +422,11 @@ class _PaymentSreenState extends State<PaymentSreen> {
         ),
         child: Padding(
           padding: const EdgeInsets.all(12),
-          child: Image.network(
-            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPaMGgm2xrNztBlJvHiv4g_AlXnOLDivek2g&usqp=CAU',
-            width: 100,
-            height: 100,
-            fit: BoxFit.contain,
+          child: Image.asset(
+            assetImage,
+            width: 48,
+            height: 48,
+            fit: BoxFit.cover,
           ),
         ),
       ),
@@ -393,10 +434,29 @@ class _PaymentSreenState extends State<PaymentSreen> {
   }
 }
 
-const List<String> list = [
-  'Sacombank',
-  'Vietcombank',
-  'Mbbank',
-  'DongABank',
-  'Sacombank'
+const List<dynamic> banks = [
+  [
+    'Bank Of America',
+    'XXXX XXXX XXXX 7891',
+    'assets/images/Bank-of-America.png'
+  ],
+  [
+    'China Construction Bank',
+    'XXXX XXXX XXXX 6933',
+    'assets/images/China-Construction-Bank.png'
+  ],
+  [
+    'JPMorgan Chase',
+    'XXXX XXXX XXXX 5555',
+    'assets/images/JP-Morgan-Chase-Symbol.png'
+  ],
+];
+
+const List<dynamic> wallets = [
+  ['BitKeep Wallet', 'assets/images/BitKeep-Wallet.png'],
+  ['CoinbaseWallet', 'assets/images/Coinbase-Wallet.png'],
+  ['ElectrumWallet', 'assets/images/Electrum-Wallet.png'],
+  ['MetaMask Wallet', 'assets/images/MetaMask-Wallet.png'],
+  ['PayPal Wallet', 'assets/images/paypal-wallet.png'],
+  ['TrustWallet', 'assets/images/TrustWallet.png'],
 ];

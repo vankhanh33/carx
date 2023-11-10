@@ -1,7 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:carx/utilities/app_colors.dart';
-import 'package:carx/utils/navigation_controller.dart';
+import 'package:carx/utilities/navigation_controller.dart';
 import 'package:carx/data/features/categories/ui/categories_view.dart';
 import 'package:carx/data/features/home/ui/home_screen.dart';
 import 'package:carx/data/features/order_management/ui/car_rental_booking.dart';

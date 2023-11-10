@@ -4,7 +4,7 @@ import 'package:carx/data/features/categories/bloc/categories_bloc.dart';
 import 'package:carx/data/features/categories/bloc/categories_event.dart';
 import 'package:carx/data/features/categories/bloc/categories_state.dart';
 
-import 'package:carx/data/reponsitories/car_reponsitory.dart';
+import 'package:carx/data/reponsitories/car/car_reponsitory_impl.dart';
 import 'package:carx/utilities/app_colors.dart';
 import 'package:carx/utilities/app_routes.dart';
 import 'package:flutter/material.dart';
@@ -24,26 +24,30 @@ class _CategoriesViewState extends State<CategoriesView>
 
   @override
   void initState() {
-    bloc = CategoriesBloc(CarReponsitory.response());
+    bloc = CategoriesBloc(CarReponsitoryImpl.response());
     bloc.add(FetchBrandsEvent());
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    bloc.close();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Container(
-          margin: const EdgeInsets.only(left: 4),
-          child: Image.asset('assets/images/xcar-full-black.png'),
-        ),
         title: const Text(
           'Categories',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, Routes.routeSearch);
+            },
             icon: const Icon(Icons.search),
           ),
         ],
@@ -72,6 +76,7 @@ class _CategoriesViewState extends State<CategoriesView>
                     const SizedBox(height: 16),
                     GridView.builder(
                       shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
                       scrollDirection: Axis.vertical,
                       gridDelegate:
                           const SliverGridDelegateWithMaxCrossAxisExtent(

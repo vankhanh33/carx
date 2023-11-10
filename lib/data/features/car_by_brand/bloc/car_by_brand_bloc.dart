@@ -4,7 +4,7 @@ import 'package:carx/data/features/car_by_brand/bloc/car_by_brand_state.dart';
 
 import 'package:carx/data/model/car.dart';
 
-import 'package:carx/data/reponsitories/car_reponsitory.dart';
+import 'package:carx/data/reponsitories/car/car_reponsitory.dart';
 
 class CarByBrandBloc extends Bloc<CarByBrandEvent, CarByBrandState> {
   CarByBrandBloc(CarReponsitory reponsitory) : super(CarByBrandInitial()) {

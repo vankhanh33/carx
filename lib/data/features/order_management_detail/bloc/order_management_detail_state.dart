@@ -1,12 +1,9 @@
 abstract class OrderManagementDetailState {}
 
-class OrderManagementDetailInitialState extends OrderManagementDetailState {}
+class InitialOrderManagementDetailState extends OrderManagementDetailState {}
 
-class CancelOrderLoadingState extends OrderManagementDetailState {}
+class OrderLoadingCancelState extends OrderManagementDetailState {}
 
-class CancelledOrderSuccessState extends OrderManagementDetailState {}
+class OrderCancelledSuccessState extends OrderManagementDetailState {}
 
-class CancelOrderFailureState extends OrderManagementDetailState {
-  String messageError;
-  CancelOrderFailureState({required this.messageError});
-}
+class OrderCancelledFailureState extends OrderManagementDetailState {}

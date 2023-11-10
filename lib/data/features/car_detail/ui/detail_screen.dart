@@ -1,4 +1,4 @@
-// ignore_for_file: library_private_types_in_public_api
+// ignore_for_file: library_private_types_in_public_api, unnecessary_string_interpolations
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carx/components/rating_bar_widget.dart';
@@ -11,16 +11,18 @@ import 'package:carx/data/model/distributor.dart';
 import 'package:carx/data/features/car_detail/bloc/detail_bloc.dart';
 import 'package:carx/data/features/car_detail/bloc/detail_event.dart';
 import 'package:carx/data/features/car_detail/bloc/detail_state.dart';
-import 'package:carx/data/reponsitories/car_reponsitory.dart';
 
-import 'package:carx/data/features/order/order_screen.dart';
+import 'package:carx/data/reponsitories/car/car_reponsitory_impl.dart';
+import 'package:carx/service/local/favorite_car_service.dart';
+import 'package:carx/utilities/app_colors.dart';
+
 import 'package:carx/utilities/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:shimmer/shimmer.dart';
+
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class CarDetailView extends StatefulWidget {
@@ -35,23 +37,29 @@ class _CarDetailViewState extends State<CarDetailView> {
 
   @override
   void initState() {
-    carDetailBloc = CarDetailBloc(CarReponsitory.response());
+    carDetailBloc =
+        CarDetailBloc(CarReponsitoryImpl.response(), CarFavoriteService());
+
     super.initState();
   }
 
   @override
   void dispose() {
     carDetailBloc.close();
+
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     Car car = ModalRoute.of(context)!.settings.arguments as Car;
+
     return BlocBuilder<CarDetailBloc, CarDetailState>(
-      bloc: carDetailBloc..add(FetchCarDetailEvent(car: car)),
+      bloc: carDetailBloc
+        ..add(FetchCarDetailEvent(car: car))
+        ..add(CheckCarFavoriteEvent(car.id)),
       builder: (context, state) {
-        if (state is CarDetailLoading) {
+        if (state.detailStatus == CarDetailStatus.loading) {
           return const Scaffold(
             body: Center(
               child: SpinKitCircle(
@@ -60,9 +68,10 @@ class _CarDetailViewState extends State<CarDetailView> {
               ),
             ),
           );
-        } else if (state is CarDetailSuccess) {
-          final CarDetail carDetail = state.carDetail;
-          final Distributor distributor = state.distributor;
+        } else if (state.detailStatus == CarDetailStatus.success) {
+          final CarDetail carDetail = state.carDetail!;
+          final Distributor distributor = state.distributor!;
+
           return Scaffold(
             bottomNavigationBar: Container(
               width: MediaQuery.of(context).size.width,
@@ -110,16 +119,16 @@ class _CarDetailViewState extends State<CarDetailView> {
                           .pushNamed(Routes.routeOrder, arguments: car);
                     },
                     style: TextButton.styleFrom(
-                      backgroundColor: Colors.amber[100],
+                      backgroundColor: AppColors.primary,
                       fixedSize: const Size(130, 48),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8.0)),
-                      side: const BorderSide(width: 1, color: Colors.amber),
+                      side: const BorderSide(width: 1, color: AppColors.lightGray),
                     ),
                     child: const Text(
                       'Book now',
                       style: TextStyle(
-                          color: Colors.black,
+                          color: AppColors.secondary,
                           fontWeight: FontWeight.w500,
                           fontSize: 16),
                     ),
@@ -129,7 +138,7 @@ class _CarDetailViewState extends State<CarDetailView> {
             ),
             body: Container(
               height: MediaQuery.of(context).size.height,
-              color: Color(0xffe0e3e7),
+              color: AppColors.lightGray,
               child: Stack(
                 children: [
                   SingleChildScrollView(
@@ -141,8 +150,6 @@ class _CarDetailViewState extends State<CarDetailView> {
                               width: MediaQuery.of(context).size.width,
                               child: Center(
                                 child: CachedNetworkImage(
-                                  placeholder: (context, url) =>
-                                      shimmerImageCar(),
                                   imageUrl: car.image,
                                   height: 272,
                                   fit: BoxFit.contain,
@@ -152,9 +159,22 @@ class _CarDetailViewState extends State<CarDetailView> {
                             AppBar(
                               actions: [
                                 IconButton(
-                                    onPressed: () {},
-                                    icon: SvgPicture.asset(
-                                        'assets/svg/favorite.svg')),
+                                  onPressed: () {
+                                    carDetailBloc
+                                        .add(AddOrDeleteCarFavoriteEvent(car));
+                                  },
+                                  icon: state.isFavorite
+                                      ? const Icon(
+                                          Icons.favorite_rounded,
+                                          color: Colors.redAccent,
+                                          size: 26,
+                                        )
+                                      : const Icon(
+                                          Icons.favorite_border_rounded,
+                                          color: AppColors.primary,
+                                          size: 26,
+                                        ),
+                                ),
                               ],
                               backgroundColor: Colors.transparent,
                               elevation: 0.0,
@@ -169,15 +189,15 @@ class _CarDetailViewState extends State<CarDetailView> {
                                 topLeft: Radius.circular(32),
                                 topRight: Radius.circular(32)),
                           ),
-                          padding:
-                              EdgeInsets.only(top: 12, left: 12, right: 12),
+                          padding: const EdgeInsets.only(
+                              top: 12, left: 12, right: 12),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Center(
                                 child: Container(
                                   height: 6,
-                                  width: 77,
+                                  width: 44,
                                   decoration: BoxDecoration(
                                     color: Colors.grey[400],
                                     borderRadius: BorderRadius.circular(999),
@@ -317,7 +337,8 @@ class _CarDetailViewState extends State<CarDetailView> {
                                             BorderRadius.circular(999),
                                         child: FadeInImage(
                                           placeholder: const AssetImage(
-                                              'assets/images/xcar-full-black.png'),
+                                            'assets/images/logo-dark.png',
+                                          ),
                                           image: NetworkImage(
                                               distributor.user.image!),
                                           width: 42,
@@ -611,8 +632,8 @@ class _CarDetailViewState extends State<CarDetailView> {
               ),
             ),
           );
-        } else if (state is CarDetailFailure) {
-          return Center(child: Text(state.error));
+        } else if (state.detailStatus == CarDetailStatus.failure) {
+          return const Center(child: Text('Error fetch data'));
         } else {
           return const Center(child: Text('No load car'));
         }
@@ -724,18 +745,6 @@ class _CarDetailViewState extends State<CarDetailView> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget shimmerImageCar() {
-    return Shimmer.fromColors(
-      baseColor: Colors.grey.withOpacity(0.5),
-      highlightColor: Colors.grey,
-      child: Image.asset(
-        'assets/images/xcar-full-black.png',
-        height: 150,
-        fit: BoxFit.contain,
       ),
     );
   }
