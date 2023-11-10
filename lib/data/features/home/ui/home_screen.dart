@@ -9,6 +9,7 @@ import 'package:carx/components/shimmer_load_car.dart';
 import 'package:carx/data/features/home/bloc/home_bloc.dart';
 import 'package:carx/data/features/home/bloc/home_event.dart';
 import 'package:carx/data/features/home/bloc/home_state.dart';
+import 'package:carx/data/model/slider.dart';
 
 import 'package:carx/data/reponsitories/car/car_reponsitory_impl.dart';
 import 'package:carx/utilities/app_colors.dart';
@@ -22,6 +23,7 @@ import 'package:dots_indicator/dots_indicator.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
@@ -59,8 +61,8 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HomeBloc(CarReponsitoryImpl.response())
-        ..add(FethCarAndBrandHomeEvent()),
+      create: (context) =>
+          HomeBloc(CarReponsitoryImpl.response())..add(FetchDataHomeEvent()),
       child: BlocConsumer<HomeBloc, HomeState>(
         listener: (context, state) {
           if (state.status == HomeStatus.success) {
@@ -151,59 +153,79 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                             ],
                           ),
                           const SizedBox(height: 12),
-                          StreamBuilder(
-                            builder: (context, snapshot) {
-                              return Stack(
-                                children: [
-                                  CarouselSlider(
-                                    options: CarouselOptions(
-                                      autoPlay: true,
-                                      pauseAutoPlayOnTouch: true,
-                                      aspectRatio: 16 / 9,
-                                      height: 175,
-                                      enlargeCenterPage: true,
-                                      onPageChanged: (index, reason) {
-                                        sliderController.sink.add(index);
-                                      },
+                          BlocBuilder<HomeBloc, HomeState>(
+                            builder: (context, state) {
+                              if (state.status == HomeStatus.loading) {
+                                return Container(
+                                  height: 182,
+                                  width: double.infinity,
+                                  color: AppColors.whiteSmoke,
+                                  child: const Center(
+                                    child: SpinKitCircle(
+                                      color: AppColors.lightGray,
+                                      size: 60,
                                     ),
-                                    items: urlImages.map((urlImage) {
-                                      return Builder(
-                                        builder: (context) {
-                                          return Image.network(
-                                            urlImage,
-                                            fit: BoxFit.fill,
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                          );
-                                        },
-                                      );
-                                    }).toList(),
                                   ),
-                                  Positioned(
-                                    bottom: 0,
-                                    left: 0,
-                                    right: 0,
-                                    child: DotsIndicator(
-                                      dotsCount: urlImages.length,
-                                      position: snapshot.data,
-                                      decorator: DotsDecorator(
-                                        activeColor: Colors.white,
-                                        color: Colors.grey,
-                                        size: const Size.square(6.0),
-                                        activeSize: const Size(12.0, 6.0),
-                                        activeShape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(5.0),
+                                );
+                              } else if (state.status == HomeStatus.success) {
+                                List<SliderImage> sliders = state.sliders;
+                                return Stack(
+                                  children: [
+                                    CarouselSlider(
+                                      options: CarouselOptions(
+                                        height: 182.0,
+                                        aspectRatio: 16 / 9,
+                                        viewportFraction: 0.8,
+                                        initialPage: 0,
+                                        enableInfiniteScroll: true,
+                                        reverse: false,
+                                        autoPlay: true,
+                                        autoPlayInterval: Duration(seconds: 3),
+                                        autoPlayAnimationDuration:
+                                            const Duration(milliseconds: 800),
+                                        autoPlayCurve: Curves.fastOutSlowIn,
+                                        enlargeCenterPage: true,
+                                        scrollDirection: Axis.horizontal,
+                                        onPageChanged: (index, reason) {
+                                          context.read<HomeBloc>().add(UpdateIndexIndicatorSlider(index));
+                                        },
+                                      ),
+                                      items: sliders.map((sliders) {
+                                        return Builder(
+                                          builder: (context) {
+                                            return Image.network(
+                                              sliders.image,
+                                              fit: BoxFit.fill,
+                                              width: double.infinity,
+                                            );
+                                          },
+                                        );
+                                      }).toList(),
+                                    ),
+                                    Positioned(
+                                      bottom: 5,
+                                      left: 0,
+                                      right: 0,
+                                      child: DotsIndicator(
+                                        dotsCount: sliders.length,
+                                        position: state.currentIndexSlider,
+                                        decorator: DotsDecorator(
+                                          activeColor: Colors.white,
+                                          color: Colors.grey,
+                                          size: const Size.square(6.0),
+                                          activeSize: const Size(12.0, 6.0),
+                                          activeShape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(5.0),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  )
-                                ],
-                              );
+                                    )
+                                  ],
+                                );
+                              }
+                              return Container();
                             },
-                            stream: sliderController.stream,
-                            initialData: 0,
                           ),
                           const SizedBox(height: 12),
                         ],
@@ -448,12 +470,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
   }
 }
 
-const List<String> urlImages = [
-  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZyVem3ZVH5DLvkQlsVraCMtG_lNJOgNvg-Q&usqp=CAU',
-  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTM2t1IpZpXNj5uHst69iihsjv4vzcywNLkuQ&usqp=CAU',
-  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT07W_8R_54kGnRelgD7Eakaygq2MNpomegCg&usqp=CAU',
-  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRFYwZ66mjVQfXTjaa_SQ1MSdIWXIG6UZexA&usqp=CAU'
-];
+
 
 class TabNotifier with ChangeNotifier {
   int currentItem;

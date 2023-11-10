@@ -15,7 +15,6 @@ import 'package:carx/data/features/search/ui/search_view.dart';
 import 'package:carx/view/favorite_screen.dart';
 
 import 'package:carx/view/main_view.dart';
-import 'package:path/path.dart';
 
 class Routes {
   static final pages = {

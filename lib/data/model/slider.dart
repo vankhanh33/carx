@@ -1,15 +1,15 @@
-class Slider {
-  final int id;
+class SliderImage {
+  final String id;
   final String image;
-  final String car_id;
-  const Slider({
+  final String carId;
+  const SliderImage({
     required this.id,
     required this.image,
-    required this.car_id,
+    required this.carId,
   });
-  factory Slider.fromJson(Map<String, dynamic> json) => Slider(
+  factory SliderImage.fromJson(Map<String, dynamic> json) => SliderImage(
         id: json['id'],
         image: json['image'],
-        car_id: json['car_id'],
+        carId: json['car_id'],
       );
 }
