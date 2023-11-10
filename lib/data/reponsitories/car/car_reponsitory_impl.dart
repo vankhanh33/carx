@@ -6,6 +6,7 @@ import 'package:carx/data/model/car_detail.dart';
 
 import 'package:carx/data/model/dio_response.dart';
 import 'package:carx/data/model/distributor.dart';
+import 'package:carx/data/model/slider.dart';
 import 'package:carx/data/reponsitories/car/car_reponsitory.dart';
 
 import 'package:carx/service/client/dio_client.dart';
@@ -136,6 +137,30 @@ class CarReponsitoryImpl implements CarReponsitory {
       }
     } catch (e) {
       throw Exception('Error exception $e');
+    }
+  }
+
+  @override
+  Future<List<SliderImage>> fetchSliders() async {
+    try {
+      final reponse = await _dio.get(FETCH_SLIDER);
+      if (reponse.statusCode == 200) {
+        DioReponse dioResponse = DioReponse.fromJson(jsonDecode(reponse.data));
+
+        if (dioResponse.status == 'OK') {
+          final List<dynamic> responseData = dioResponse.data;
+          final List<SliderImage> sliders =
+              responseData.map((slider) => SliderImage.fromJson(slider)).toList();
+
+          return sliders;
+        } else {
+          return [];
+        }
+      } else {
+        throw Exception('Error request exception');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch cars: $e');
     }
   }
 }

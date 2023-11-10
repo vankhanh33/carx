@@ -15,7 +15,7 @@ import 'package:carx/data/model/order_management.dart';
 import 'package:carx/data/reponsitories/order/order_reponsitory_impl.dart';
 import 'package:carx/loading/loading.dart';
 
-import 'package:carx/loading/loading_screen.dart';
+
 
 import 'package:carx/utilities/app_colors.dart';
 

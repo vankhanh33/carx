@@ -7,6 +7,7 @@ const REGISTER = '/users/register.php';
 const FETCH_ALL_CAR = '/data/get/get-all-cars.php';
 const FETCH_ALL_BRAND = '/data/get/get-all-brands.php';
 const FETCH_CARS_BY_BRAND  ='/data/post/fetch-cars-by-brand.php';
+const FETCH_SLIDER = '/data/get/get-banners.php';
 
 const FETCH_CAR_DETAIL = '/data/post/car-detail.php';
 const FETCH_DISTRIBUTOR = '/data/post/fetch_distributor.php';
@@ -22,6 +23,7 @@ const FETCH_DELIVERY_ADDRESS_SELECTED = '/data/post/fetch-delivery-address-selec
 const FETCH_DELIVERY_ADDRESSES = '/data/post/fetch-deliveries.php';
 const ADD_ADDRESS = '/data/post/add_address.php';
 const DELETE_ADDRESS = '/data/post/delete_address.php';
+
 
 const FIREBASE_SEVER_KEY =
     'AAAA6eZ6_dQ:APA91bHRdxETk-DNDVVVXGm9ygnCaq1259ZPWmdPMzQqnk5wEPJgezbmnf3NdQdWNiLTG_eE-l7d-_RKv3yoedAuODEppe8z-kk8kvM-51EbPyK26Xjp4TiopcEsIE0rUqnx5ENcRpK1';
