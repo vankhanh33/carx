@@ -17,7 +17,8 @@ class AuthStateRegistering extends AuthState {
   const AuthStateRegistering({
     required this.exception,
     required bool isLoading,
-  }) : super(isLoading: isLoading);
+     String? loadingText
+  }) : super(isLoading: isLoading ,loadingText: loadingText);
 }
 
 class AuthStateLoggedIn extends AuthState {

@@ -5,7 +5,7 @@ import 'package:carx/data/model/delivery_address.dart';
 import 'package:carx/data/model/dio_response.dart';
 import 'package:carx/utilities/api_constants.dart';
 import 'package:carx/service/auth/auth_exceptions.dart';
-import 'package:carx/service/client/dio_client.dart';
+import 'package:carx/data/client/dio_client.dart';
 import 'package:dio/dio.dart';
 
 import 'package:carx/data/model/user.dart';
@@ -152,6 +152,7 @@ class AuthReponsitoryImpl implements AuthReponsitory {
         print('Failled');
       }
     } catch (e) {
+      print(e.toString());
       throw (Exception('Error'));
     }
   }

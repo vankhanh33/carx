@@ -1,6 +1,6 @@
 // ignore_for_file: curly_braces_in_flow_control_structures
 
-import 'package:carx/data/reponsitories/auth/api_auth_service.dart';
+import 'package:carx/data/reponsitories/auth/auth_reponsitory_impl.dart';
 
 import 'package:carx/service/auth/auth_exceptions.dart';
 import 'package:carx/service/auth/auth_provider.dart';
@@ -37,7 +37,7 @@ class FirebaseAuthProvider implements AuthProvider {
           .createUserWithEmailAndPassword(email: email, password: password);
       final user = currentUser;
       if (user != null) {
-        await ApiAuthService.fromApi().createOrUpdateUser(
+        await AuthReponsitoryImpl.reponsitory().createOrUpdateUser(
           id: user.id,
           name: name,
           email: email,
@@ -82,7 +82,7 @@ class FirebaseAuthProvider implements AuthProvider {
           .signInWithEmailAndPassword(email: email, password: password);
       final user = currentUser;
       if (user != null) {
-        await ApiAuthService.fromApi().createOrUpdateUser(
+        await AuthReponsitoryImpl.reponsitory().createOrUpdateUser(
           id: user.id,
           email: email,
           token: token,
@@ -137,7 +137,7 @@ class FirebaseAuthProvider implements AuthProvider {
       final user = currentUser;
       final userAuth = FirebaseAuth.instance.currentUser;
       if (user != null) {
-        await ApiAuthService.fromApi().createOrUpdateUser(
+        await AuthReponsitoryImpl.reponsitory().createOrUpdateUser(
           id: user.id,
           email: user.email,
           image: userAuth?.photoURL,

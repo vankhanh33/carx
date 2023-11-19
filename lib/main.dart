@@ -4,14 +4,14 @@ import 'package:carx/view/login/bloc/auth_bloc.dart';
 import 'package:carx/view/login/bloc/auth_event.dart';
 import 'package:carx/view/login/bloc/auth_state.dart';
 import 'package:carx/firebase_options.dart';
-import 'package:carx/loading/loading_screen.dart';
+
 import 'package:carx/service/auth/firebase_auth_provider.dart';
 import 'package:carx/utilities/app_colors.dart';
 import 'package:carx/utilities/app_routes.dart';
 import 'package:carx/utilities/notification/firebase_messaging_service.dart';
 import 'package:carx/view/login/login_view.dart';
 
-import 'package:carx/view/login/register.dart';
+import 'package:carx/view/login/register_view.dart';
 import 'package:carx/view/main_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -40,10 +40,7 @@ void main() async {
           iconTheme: IconThemeData(color: Colors.white),
         ),
       ),
-      home: BlocProvider(
-        create: (context) => AuthBloc(FirebaseAuthProvider()),
-        child: const MyApp(),
-      ),
+      home: const MyApp(),
       routes: Routes.pages,
       debugShowCheckedModeBanner: false,
     ),
@@ -67,31 +64,25 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    context.read<AuthBloc>().add(const AuthEventInitalize());
-    return BlocConsumer<AuthBloc, AuthState>(
-      builder: (context, state) {
-        if (state is AuthStateLoggedIn) {
-          return MainView();
-        } else if (state is AuthStateLoggedOut) {
-          return LoginView();
-        } else if (state is AuthStateRegistering) {
-          return RegisterView();
-        } else {
-          return Scaffold(
-            appBar: AppBar(title: Text('XCar')),
-            body: Center(child: CircularProgressIndicator()),
-          );
-        }
-      },
-      listener: (context, state) {
-        if (state.isLoading) {
-          LoadingScreen().show(
-              context: context,
-              text: state.loadingText ?? 'Please wait a moment');
-        } else {
-          LoadingScreen().hide();
-        }
-      },
+    return BlocProvider(
+      create: (context) =>
+          AuthBloc(FirebaseAuthProvider())..add(const AuthEventInitalize()),
+      child: BlocBuilder<AuthBloc, AuthState>(
+        builder: (context, state) {
+          if (state is AuthStateLoggedIn) {
+            return MainView();
+          } else if (state is AuthStateLoggedOut) {
+            return LoginView();
+          } else if (state is AuthStateRegistering) {
+            return RegisterView();
+          } else {
+            return Scaffold(
+              appBar: AppBar(title: Text('XCar')),
+              body: Center(child: CircularProgressIndicator()),
+            );
+          }
+        },
+      ),
     );
   }
 }

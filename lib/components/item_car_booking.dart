@@ -3,6 +3,7 @@ import 'package:carx/data/model/brand.dart';
 import 'package:carx/data/model/car.dart';
 import 'package:carx/data/model/order.dart';
 import 'package:carx/data/model/order_management.dart';
+import 'package:carx/utilities/app_text.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
@@ -86,9 +87,7 @@ class _CarItemBookingState extends State<CarItemBooking> {
                           padding: const EdgeInsets.only(left: 4),
                           child: Text(
                             brand.name,
-                            style: const TextStyle(
-                              fontSize: 14,
-                            ),
+                            style: AppText.body2,
                           ),
                         ),
                       ],
@@ -149,12 +148,11 @@ class _CarItemBookingState extends State<CarItemBooking> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          title,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+          title,  style: AppText.body2,
         ),
         Text(
           value,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+           style: AppText.body2.copyWith(fontWeight: FontWeight.bold),
         ),
       ],
     );

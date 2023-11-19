@@ -5,7 +5,7 @@ import 'package:carx/data/model/order.dart';
 import 'package:carx/data/model/order_management.dart';
 import 'package:carx/data/reponsitories/order/order_reponsitory.dart';
 
-import 'package:carx/service/client/dio_client.dart';
+import 'package:carx/data/client/dio_client.dart';
 import 'package:carx/utilities/api_constants.dart';
 import 'package:carx/utilities/notification/notification_service.dart';
 import 'package:dio/dio.dart';

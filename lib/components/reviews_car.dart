@@ -1,14 +1,14 @@
+import 'package:carx/data/model/car_review.dart';
+import 'package:carx/utilities/app_colors.dart';
+import 'package:carx/utilities/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-class ReviewsCardWidget extends StatefulWidget {
-  const ReviewsCardWidget({Key? key}) : super(key: key);
+class ReviewsCardWidget extends StatelessWidget {
+  final CarReview carReview;
+  const ReviewsCardWidget({Key? key, required this.carReview})
+      : super(key: key);
 
-  @override
-  _ReviewsCardWidgetState createState() => _ReviewsCardWidgetState();
-}
-
-class _ReviewsCardWidgetState extends State<ReviewsCardWidget> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -22,29 +22,29 @@ class _ReviewsCardWidgetState extends State<ReviewsCardWidget> {
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Expanded(
+                Expanded(
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Expanded(
                         child: Text(
-                          'Sarah, Dubai Sarah',
+                          carReview.userName,
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
-                          style: TextStyle(
-                            fontSize: 12,
+                          style: const TextStyle(
+                            fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
-                      Padding(
+                      const Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
                         child: Icon(
                           Icons.verified,
                           size: 12,
                         ),
                       ),
-                      Padding(
+                      const Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(4, 0, 12, 0),
                         child: Text(
                           'Verified Purchase',
@@ -64,7 +64,7 @@ class _ReviewsCardWidgetState extends State<ReviewsCardWidget> {
                     color: Color(0xFFFFC107),
                   ),
                   direction: Axis.horizontal,
-                  rating: 4.5,
+                  rating: carReview.rating,
                   itemCount: 5,
                   itemSize: 12,
                 ),
@@ -72,35 +72,32 @@ class _ReviewsCardWidgetState extends State<ReviewsCardWidget> {
             ),
           ),
           Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
+            padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 0, 0),
             child: Container(
               width: MediaQuery.sizeOf(context).width,
               decoration: BoxDecoration(),
-              child: const Text(
-                'Awesome performance mobile and best experience as well camera is also good very clear picture quality and battery is 80% charge in 15 minute. Good product by OnePlus.',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                ),
+              child: Text(
+                carReview.comment,
+                style: AppText.body2,
               ),
             ),
           ),
-          const Padding(
-            padding: EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
+          Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 0),
             child: Row(
               mainAxisSize: MainAxisSize.max,
               children: [
-                Icon(
+                const Icon(
                   Icons.thumb_up_off_alt,
                   size: 16,
                 ),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(4, 0, 0, 0),
+                  padding: const EdgeInsetsDirectional.fromSTEB(4, 0, 0, 0),
                   child: Text(
-                    '16',
+                    '${carReview.like}',
                   ),
                 ),
-                Padding(
+                const Padding(
                   padding: EdgeInsetsDirectional.fromSTEB(12, 0, 0, 0),
                   child: Icon(
                     Icons.thumb_down_off_alt,
@@ -108,9 +105,23 @@ class _ReviewsCardWidgetState extends State<ReviewsCardWidget> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(4, 0, 0, 0),
+                  padding: const EdgeInsetsDirectional.fromSTEB(4, 0, 0, 0),
                   child: Text(
-                    '3',
+                    '${carReview.dislike}',
+                  ),
+                ),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Text(
+                      carReview.createdAs,
+                      maxLines: 1,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: AppColors.fontColor,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
                   ),
                 ),
               ],

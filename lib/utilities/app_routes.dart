@@ -1,23 +1,29 @@
 // ignore_for_file: equal_keys_in_map
 
-import 'package:carx/data/features/add_delivery_address/add_delivery_address_screen.dart';
-import 'package:carx/data/features/car_by_brand/car_by_brand_screen.dart';
-import 'package:carx/data/features/car_detail/ui/detail_screen.dart';
-import 'package:carx/data/features/delivery_address/delivery_address_screen.dart';
-import 'package:carx/data/features/add_delivery_address/edit_delivery_address_screen.dart';
-import 'package:carx/data/features/edit_profile/ui/edit_profile_screen.dart';
-import 'package:carx/data/features/order/order_screen.dart';
-import 'package:carx/data/features/order_management/ui/car_rental_booking.dart';
-import 'package:carx/data/features/order_management_detail/ui/car_rental_booking_detail.dart';
-import 'package:carx/data/features/order_success/order_success_view.dart';
-import 'package:carx/data/features/payment/ui/payment_screen.dart';
-import 'package:carx/data/features/search/ui/search_view.dart';
+import 'package:carx/data/presentation/add_delivery_address/add_delivery_address_screen.dart';
+import 'package:carx/data/presentation/car_by_brand/car_by_brand_screen.dart';
+import 'package:carx/data/presentation/car_detail/ui/detail_screen.dart';
+import 'package:carx/data/presentation/delivery_address/delivery_address_screen.dart';
+import 'package:carx/data/presentation/add_delivery_address/edit_delivery_address_screen.dart';
+import 'package:carx/data/presentation/edit_profile/ui/edit_profile_screen.dart';
+import 'package:carx/data/presentation/order/order_screen.dart';
+import 'package:carx/data/presentation/order_management/ui/car_rental_booking.dart';
+import 'package:carx/data/presentation/order_management_detail/ui/car_rental_booking_detail.dart';
+import 'package:carx/data/presentation/order_success/order_success_view.dart';
+import 'package:carx/data/presentation/payment/ui/payment_screen.dart';
+import 'package:carx/data/presentation/search/ui/search_view.dart';
+
 import 'package:carx/view/favorite_screen.dart';
+import 'package:carx/view/login/login_view.dart';
+import 'package:carx/view/login/register_view.dart';
 
 import 'package:carx/view/main_view.dart';
 
+
 class Routes {
   static final pages = {
+    routeLogin: (context) => const LoginView(),
+    routeRegister: (context) => const RegisterView(),
     routeCarDetail: (context) => const CarDetailView(),
     routeMain: (context) => const MainView(),
     routeEditProfile: (context) => const EditProfileScreen(),
@@ -33,7 +39,8 @@ class Routes {
     routeEditDeliveryAddresses: (context) => const EditDeliveryAddressScreen(),
     routeFavorite: (context) => const FavoriteScreen(),
   };
-
+  static const routeRegister = '/register';
+  static const routeLogin = '/login';
   static const routeCarDetail = '/car_detail';
   static const routeMain = '/main';
   static const routeEditProfile = '/edit_profile';

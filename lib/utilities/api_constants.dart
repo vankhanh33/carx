@@ -25,6 +25,9 @@ const ADD_ADDRESS = '/data/post/add_address.php';
 const DELETE_ADDRESS = '/data/post/delete_address.php';
 
 
+const FETCH_REVIEWS =  '/data/post/fetch-reviews-by-car.php';
+const ADD_REVIEW = '/data/post/add_review.php';
+
 const FIREBASE_SEVER_KEY =
     'AAAA6eZ6_dQ:APA91bHRdxETk-DNDVVVXGm9ygnCaq1259ZPWmdPMzQqnk5wEPJgezbmnf3NdQdWNiLTG_eE-l7d-_RKv3yoedAuODEppe8z-kk8kvM-51EbPyK26Xjp4TiopcEsIE0rUqnx5ENcRpK1';
 const FCM_END_POINT = 'https://fcm.googleapis.com/fcm/send';
