@@ -2,11 +2,12 @@
 
 import 'package:carx/utilities/app_colors.dart';
 import 'package:carx/utilities/navigation_controller.dart';
-import 'package:carx/data/features/categories/ui/categories_view.dart';
-import 'package:carx/data/features/home/ui/home_screen.dart';
-import 'package:carx/data/features/order_management/ui/car_rental_booking.dart';
-import 'package:carx/data/features/personal/personal_view.dart';
-import 'package:carx/view/notification_screen.dart';
+import 'package:carx/data/presentation/categories/ui/categories_view.dart';
+import 'package:carx/data/presentation/home/ui/home_screen.dart';
+import 'package:carx/data/presentation/order_management/ui/car_rental_booking.dart';
+import 'package:carx/data/presentation/personal/personal_view.dart';
+import 'package:carx/data/presentation/notify/notification_screen.dart';
+import 'package:carx/view/explore_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -20,10 +21,11 @@ class MainView extends StatefulWidget {
 }
 
 class _MainViewState extends State<MainView> {
-  final MainController controller = Get.put(MainController());
+  late final MainController controller;
   @override
-  void dispose() {
-    super.dispose();
+  void initState() {
+    super.initState();
+    controller = Get.put(MainController());
   }
 
   @override
@@ -71,6 +73,7 @@ class _MainViewState extends State<MainView> {
           showUnselectedLabels: false,
           backgroundColor: AppColors.primary,
           fixedColor: AppColors.secondary,
+          
           type: BottomNavigationBarType.fixed,
         ),
       ),
@@ -96,7 +99,7 @@ class _MainViewState extends State<MainView> {
 final pages = [
   const HomeView(),
   const CategoriesView(),
-  const CarRentalBooking(),
+  const ExploreScreen(),
   const NotificationScreeen(),
   const PersonalView(),
 ];

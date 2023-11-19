@@ -6,12 +6,14 @@ import 'package:carx/data/model/car_detail.dart';
 
 import 'package:carx/data/model/dio_response.dart';
 import 'package:carx/data/model/distributor.dart';
+import 'package:carx/data/model/car_review.dart';
 import 'package:carx/data/model/slider.dart';
 import 'package:carx/data/reponsitories/car/car_reponsitory.dart';
 
-import 'package:carx/service/client/dio_client.dart';
+import 'package:carx/data/client/dio_client.dart';
 import 'package:carx/utilities/api_constants.dart';
 import 'package:dio/dio.dart';
+import 'package:intl/intl.dart';
 
 class CarReponsitoryImpl implements CarReponsitory {
   final Dio _dio;
@@ -149,10 +151,70 @@ class CarReponsitoryImpl implements CarReponsitory {
 
         if (dioResponse.status == 'OK') {
           final List<dynamic> responseData = dioResponse.data;
-          final List<SliderImage> sliders =
-              responseData.map((slider) => SliderImage.fromJson(slider)).toList();
+          final List<SliderImage> sliders = responseData
+              .map((slider) => SliderImage.fromJson(slider))
+              .toList();
 
           return sliders;
+        } else {
+          return [];
+        }
+      } else {
+        throw Exception('Error request exception');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch cars: $e');
+    }
+  }
+
+  @override
+  Future<void> addReview({
+    required double rating,
+    required String comment,
+    required String userId,
+    required int carId,
+  }) async {
+    String timeNow = DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
+
+    Map<String, dynamic> mapReview = {
+      'rating': rating,
+      'comment': comment,
+      'created_as': timeNow,
+      'user_id': userId,
+      'car_id': carId,
+    };
+    try {
+      final response = await _dio.post(
+        ADD_REVIEW,
+        data: FormData.fromMap(mapReview),
+      );
+      if (response.statusCode == 200) {
+        DioReponse dioResponse = DioReponse.fromJson(jsonDecode(response.data));
+        if (dioResponse.status == 'OK') {
+          print('success');
+        }
+      }
+    } catch (e) {
+      throw Exception('Error Sever ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<List<CarReview>> fetchReviewBycar(int carId) async {
+    try {
+      final reponse = await _dio.post(
+        FETCH_REVIEWS,
+        data: FormData.fromMap({'car_id': carId}),
+      );
+      if (reponse.statusCode == 200) {
+        DioReponse dioResponse = DioReponse.fromJson(jsonDecode(reponse.data));
+
+        if (dioResponse.status == 'OK') {
+          final List<dynamic> responseData = dioResponse.data;
+          final List<CarReview> reviews =
+              responseData.map((review) => CarReview.fromJson(review)).toList();
+
+          return reviews;
         } else {
           return [];
         }

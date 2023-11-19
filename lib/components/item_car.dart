@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carx/data/model/car.dart';
 
 import 'package:carx/utilities/app_routes.dart';
+import 'package:carx/utilities/app_text.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -12,7 +13,7 @@ class ItemCar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     MediaQuery.of(context).size.width;
-    return InkWell(
+    return GestureDetector(
       onTap: () {
         if (car != null) {
           Navigator.pushNamed(context, Routes.routeCarDetail, arguments: car);
@@ -52,35 +53,20 @@ class ItemCar extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               '${car?.name}',
-              style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  overflow: TextOverflow.ellipsis),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.star_half_rounded),
-                Text('4.5'),
-                SizedBox(width: 12),
-                Text('|'),
-                SizedBox(width: 12),
-                Container(
-                  padding: EdgeInsets.all(4),
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(4)),
-                    color: Colors.grey,
-                  ),
-                  child: Text('New'),
-                )
-              ],
+              style: AppText.subtitle3,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
             ),
             const SizedBox(height: 8),
             Text(
-              '\$${car?.price}',
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              '${car?.brand}',
+              style: AppText.body1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '\$${car?.price}/day',
+              style: AppText.subtitle3,
             ),
           ],
         ),

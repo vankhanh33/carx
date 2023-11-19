@@ -75,7 +75,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     on<AuthEventRegister>(
       (event, emit) async {
-        emit(const AuthStateLoggedOut(
+        emit(const AuthStateRegistering(
             exception: null,
             isLoading: true,
             loadingText: 'Please wait while create account'));
