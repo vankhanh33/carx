@@ -27,6 +27,9 @@ class LoginState extends State<LoginView> {
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
   late bool _hiddenPassword;
+  final FocusNode _nameFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
+  
 
   @override
   void initState() {
@@ -40,6 +43,8 @@ class LoginState extends State<LoginView> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _nameFocusNode.dispose();
+    _passwordFocusNode.dispose();
     super.dispose();
   }
 
@@ -105,6 +110,7 @@ class LoginState extends State<LoginView> {
                   ),
                   const SizedBox(height: 32),
                   TextField(
+                    focusNode: _nameFocusNode,
                     controller: _emailController,
                     autocorrect: false,
                     cursorColor: Colors.black,
@@ -130,6 +136,7 @@ class LoginState extends State<LoginView> {
                   ),
                   const SizedBox(height: 16),
                   TextField(
+                    focusNode: _passwordFocusNode,
                     controller: _passwordController,
                     cursorColor: Colors.black,
                     obscureText: _hiddenPassword,
@@ -191,6 +198,8 @@ class LoginState extends State<LoginView> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(999))),
                       onPressed: () {
+                         _nameFocusNode.unfocus();
+                         _passwordFocusNode.unfocus();
                         context.read<AuthBloc>().add(
                               AuthEventLogIn(
                                   email: _emailController.text,

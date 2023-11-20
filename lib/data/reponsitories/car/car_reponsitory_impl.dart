@@ -183,6 +183,7 @@ class CarReponsitoryImpl implements CarReponsitory {
       'user_id': userId,
       'car_id': carId,
     };
+    print(comment);
     try {
       final response = await _dio.post(
         ADD_REVIEW,

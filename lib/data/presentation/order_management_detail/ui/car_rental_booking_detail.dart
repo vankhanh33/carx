@@ -464,8 +464,29 @@ class _CarRentalBookingDetailState extends State<CarRentalBookingDetail> {
                                 height: 45,
                                 child: InkWell(
                                   onTap: () async {
-                                    await ratingVoteDialog(
+                                    bool isReviews = await ratingVoteDialog(
                                         context, car, order.code!);
+                                    if (isReviews) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            'Your review has been submitted',
+                                            style: TextStyle(
+                                                color: AppColors.white),
+                                          ),
+                                          backgroundColor:
+                                              AppColors.colorSuccess,
+                                          behavior: SnackBarBehavior.floating,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(8),
+                                                bottomLeft: Radius.circular(8)),
+                                          ),
+                                          duration: Duration(milliseconds: 800),
+                                        ),
+                                      );
+                                    }
                                   },
                                   overlayColor: const MaterialStatePropertyAll(
                                       Colors.transparent),
