@@ -1,4 +1,5 @@
-import 'package:carx/utilities/app_colors.dart';
+import 'package:carx/components/item_post.dart';
+
 import 'package:flutter/material.dart';
 
 class ExploreScreen extends StatelessWidget {
@@ -10,11 +11,11 @@ class ExploreScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Explore'),
       ),
-      body: const Center(
-        child: Text(
-          'No posts',
-          style: TextStyle(fontSize: 14, color: AppColors.grey),
-        ),
+      body: ListView.builder(
+        itemBuilder: (context, index) {
+          return const PostItem();
+        },
+        itemCount: 10,
       ),
     );
   }
