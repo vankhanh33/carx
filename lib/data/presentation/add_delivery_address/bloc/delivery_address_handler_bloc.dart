@@ -89,7 +89,6 @@ class DeliveryAddressHandlerBloc
         userId: uId,
       );
       try {
-        print(deliveryAddress.toString());
         await authReponsitory.addDeliveryAddress(uId, deliveryAddress);
 
         emit(state.copyWith(status: DeliveryAddressHandlerStatus.success));
@@ -107,11 +106,22 @@ class DeliveryAddressHandlerBloc
       DeleteDeliveryAddressToServerEvent event, Emitter emit) async {
     emit(state.copyWith(status: DeliveryAddressHandlerStatus.loading));
     try {
-      await authReponsitory.deleteDeliveryAddress(state.id!);
-      emit(state.copyWith(status: DeliveryAddressHandlerStatus.success));
+      bool isDelete = await authReponsitory.deleteDeliveryAddress(state.id!);
+      if (isDelete) {
+        emit(state.copyWith(status: DeliveryAddressHandlerStatus.success));
+      } else {
+        emit(state.copyWith(
+          status: DeliveryAddressHandlerStatus.failure,
+          textError: 'Cannot delete because the address is in use!',
+        ));
+      }
     } catch (e) {
-      emit(state.copyWith(status: DeliveryAddressHandlerStatus.failure));
+      emit(state.copyWith(
+        status: DeliveryAddressHandlerStatus.failure,
+        textError: 'Error!!!',
+      ));
     }
+    emit(state.copyWith(status: DeliveryAddressHandlerStatus.initial));
   }
 
   bool isPhoneNumber(String phoneNumber) {

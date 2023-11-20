@@ -158,17 +158,21 @@ class AuthReponsitoryImpl implements AuthReponsitory {
   }
 
   @override
-  Future<void> deleteDeliveryAddress(String id) async {
+  Future<bool> deleteDeliveryAddress(String id) async {
     try {
       final response = await _dio.post(
         DELETE_ADDRESS,
         data: FormData.fromMap({'id': id}),
       );
       if (response.statusCode == 200) {
-        print('Success ${response.data}');
-      } else {
-        print('Failled');
+        DioReponse dioReponse = DioReponse.fromJson(jsonDecode(response.data));
+        if (dioReponse.status == 'OK') {
+          return true;
+        } else {
+          return false;
+        }
       }
+      return false;
     } catch (e) {
       throw (Exception('Error'));
     }

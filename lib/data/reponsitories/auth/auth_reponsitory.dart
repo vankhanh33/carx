@@ -15,6 +15,6 @@ abstract class AuthReponsitory {
   Future<DeliveryAddress?> fetchDeliveryAddressDefault(String uId);
   Future<List<DeliveryAddress>> fetchDeliveryAddresses(String uId);
   Future<void> addDeliveryAddress(String uId,DeliveryAddress deliveryAddress);
-  Future<void> deleteDeliveryAddress(String id);
+  Future<bool> deleteDeliveryAddress(String id);
   Future<void> updateUserInfomation(User user, File? imageFile);
 }

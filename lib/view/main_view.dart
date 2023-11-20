@@ -4,7 +4,7 @@ import 'package:carx/utilities/app_colors.dart';
 import 'package:carx/utilities/navigation_controller.dart';
 import 'package:carx/data/presentation/categories/ui/categories_view.dart';
 import 'package:carx/data/presentation/home/ui/home_screen.dart';
-import 'package:carx/data/presentation/order_management/ui/car_rental_booking.dart';
+
 import 'package:carx/data/presentation/personal/personal_view.dart';
 import 'package:carx/data/presentation/notify/notification_screen.dart';
 import 'package:carx/view/explore_screen.dart';
@@ -73,7 +73,6 @@ class _MainViewState extends State<MainView> {
           showUnselectedLabels: false,
           backgroundColor: AppColors.primary,
           fixedColor: AppColors.secondary,
-          
           type: BottomNavigationBarType.fixed,
         ),
       ),

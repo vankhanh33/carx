@@ -336,15 +336,19 @@ class _CarDetailViewState extends State<CarDetailView> {
                                         ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(999),
-                                          child: FadeInImage(
-                                            placeholder: const AssetImage(
-                                              'assets/images/logo-dark.png',
-                                            ),
-                                            image: NetworkImage(
-                                                distributor.user.image!),
+                                          child: CachedNetworkImage(
+                                            imageUrl: distributor.user.image!,
                                             width: 42,
                                             height: 42,
                                             fit: BoxFit.cover,
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    Image.asset(
+                                              'assets/images/logo-dark.png',
+                                              width: 42,
+                                              height: 42,
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
                                         ),
                                         const SizedBox(
@@ -430,7 +434,7 @@ class _CarDetailViewState extends State<CarDetailView> {
                                                 const SizedBox(height: 12),
                                                 Padding(
                                                   padding: const EdgeInsets
-                                                          .symmetric(
+                                                      .symmetric(
                                                       horizontal: 12),
                                                   child: Text(
                                                     carDetail.descriptions,
@@ -558,7 +562,7 @@ class _CarDetailViewState extends State<CarDetailView> {
                                                             Padding(
                                                               padding:
                                                                   const EdgeInsetsDirectional
-                                                                          .fromSTEB(
+                                                                      .fromSTEB(
                                                                       16,
                                                                       16,
                                                                       16,
@@ -571,7 +575,7 @@ class _CarDetailViewState extends State<CarDetailView> {
                                                             Padding(
                                                               padding:
                                                                   const EdgeInsetsDirectional
-                                                                          .fromSTEB(
+                                                                      .fromSTEB(
                                                                       16,
                                                                       0,
                                                                       16,
