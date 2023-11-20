@@ -10,8 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-Future ratingVoteDialog(BuildContext context, Car car, String codeOrder) async {
+Future<bool> ratingVoteDialog(
+    BuildContext context, Car car, String codeOrder) async {
   CarReviewBloc carReviewBloc = CarReviewBloc(CarReponsitoryImpl.response());
+  FocusNode _textFocusNode = FocusNode();
   return showDialog(
     context: context,
     builder: (context) {
@@ -26,28 +28,27 @@ Future ratingVoteDialog(BuildContext context, Car car, String codeOrder) async {
                 Loading().show(context: context);
               } else if (status == CarReviewStatus.success) {
                 Loading().hide();
+
+                Navigator.pop(context, true);
+              } else if (status == CarReviewStatus.failure) {
+                Loading().hide();
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: const Text(
-                      'Your review has been submitted',
+                  const SnackBar(
+                    content: Text(
+                      'Cannot enter special characters!',
                       style: TextStyle(color: AppColors.white),
                     ),
-                    backgroundColor: AppColors.colorSuccess,
+                    backgroundColor: AppColors.fontColor,
                     behavior: SnackBarBehavior.floating,
-                    margin: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).size.height - 100,
-                        right: 0,
-                        left: 20),
-                    shape: const RoundedRectangleBorder(
+                    shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(8),
                           bottomLeft: Radius.circular(8)),
                     ),
-                    duration: const Duration(milliseconds: 800),
+                    duration: Duration(milliseconds: 800),
                   ),
                 );
-                Navigator.pop(context);
-              } else {
+              }else{
                 Loading().hide();
               }
             },
@@ -152,9 +153,10 @@ Future ratingVoteDialog(BuildContext context, Car car, String codeOrder) async {
                             ),
                             const SizedBox(height: 16),
                             TextField(
+                              focusNode: _textFocusNode,
                               onChanged: (value) {
-                                carReviewBloc
-                                    .add(CommentInputCarReviewEvent(value));
+                                carReviewBloc.add(CommentInputCarReviewEvent(
+                                    value.toString()));
                               },
                               autocorrect: false,
                               cursorColor: Colors.black,
@@ -175,6 +177,7 @@ Future ratingVoteDialog(BuildContext context, Car car, String codeOrder) async {
                                   borderSide: BorderSide.none,
                                 ),
                               ),
+                              keyboardType: TextInputType.text,
                               style: const TextStyle(fontSize: 14),
                               minLines: 5,
                               maxLines: 5,
@@ -185,6 +188,7 @@ Future ratingVoteDialog(BuildContext context, Car car, String codeOrder) async {
                               width: MediaQuery.of(context).size.width,
                               child: TextButton(
                                 onPressed: () {
+                                  _textFocusNode.unfocus();
                                   carReviewBloc
                                       .add(SubmitCarReviewEvent(car.id));
                                 },
@@ -243,5 +247,5 @@ Future ratingVoteDialog(BuildContext context, Car car, String codeOrder) async {
         ),
       );
     },
-  );
+  ).then((value) => value ?? false);
 }

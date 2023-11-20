@@ -19,6 +19,9 @@ class AddDeliveryAddressScreen extends StatefulWidget {
 
 class _AddDeliveryAddressScreenState extends State<AddDeliveryAddressScreen> {
   late DeliveryAddressHandlerBloc _addressBloc;
+  final FocusNode _nameFocusNode = FocusNode();
+  final FocusNode _phoneFocusNode = FocusNode();
+  final FocusNode _addressFocusNode = FocusNode();
   @override
   void initState() {
     _addressBloc =
@@ -29,6 +32,9 @@ class _AddDeliveryAddressScreenState extends State<AddDeliveryAddressScreen> {
   @override
   void dispose() {
     _addressBloc.close();
+    _nameFocusNode.dispose();
+    _phoneFocusNode.dispose();
+    _addressFocusNode.dispose();
     super.dispose();
   }
 
@@ -83,6 +89,7 @@ class _AddDeliveryAddressScreenState extends State<AddDeliveryAddressScreen> {
                       height: 54,
                       alignment: Alignment.center,
                       child: TextFormField(
+                        focusNode: _nameFocusNode,
                         cursorColor: AppColors.primary,
                         decoration: const InputDecoration(
                           hintText: 'Enter full name',
@@ -104,6 +111,7 @@ class _AddDeliveryAddressScreenState extends State<AddDeliveryAddressScreen> {
                       height: 54,
                       alignment: Alignment.center,
                       child: TextFormField(
+                        focusNode: _phoneFocusNode,
                         cursorColor: AppColors.primary,
                         keyboardType: TextInputType.phone,
                         decoration: const InputDecoration(
@@ -122,7 +130,7 @@ class _AddDeliveryAddressScreenState extends State<AddDeliveryAddressScreen> {
                       padding: EdgeInsets.fromLTRB(12, 24, 12, 12),
                       child: Text(
                         'Address',
-                         style: AppText.bodyGrey,
+                        style: AppText.bodyGrey,
                       ),
                     ),
                     Container(
@@ -132,6 +140,7 @@ class _AddDeliveryAddressScreenState extends State<AddDeliveryAddressScreen> {
                       height: 54,
                       alignment: Alignment.center,
                       child: TextFormField(
+                        focusNode: _addressFocusNode,
                         cursorColor: AppColors.primary,
                         decoration: const InputDecoration(
                           hintText: 'Enter address',
@@ -158,7 +167,7 @@ class _AddDeliveryAddressScreenState extends State<AddDeliveryAddressScreen> {
                           const Expanded(
                             child: Text(
                               'Type of address',
-                             style: AppText.bodyFontColor,
+                              style: AppText.bodyFontColor,
                             ),
                           ),
                           Row(
@@ -258,6 +267,9 @@ class _AddDeliveryAddressScreenState extends State<AddDeliveryAddressScreen> {
                           padding: const EdgeInsets.all(12),
                           child: ElevatedButton(
                             onPressed: () {
+                              _nameFocusNode.unfocus();
+                              _phoneFocusNode.unfocus();
+                              _addressFocusNode.unfocus();
                               context
                                   .read<DeliveryAddressHandlerBloc>()
                                   .add(AddAddressToServerEvent());

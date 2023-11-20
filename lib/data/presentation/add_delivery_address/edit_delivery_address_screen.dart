@@ -21,7 +21,10 @@ class EditDeliveryAddressScreen extends StatefulWidget {
 
 class _EditDeliveryAddressScreenState extends State<EditDeliveryAddressScreen> {
   late DeliveryAddressHandlerBloc _addressBloc;
-  late  DeliveryAddress deliveryAddress;
+  late DeliveryAddress deliveryAddress;
+  final FocusNode _nameFocusNode = FocusNode();
+  final FocusNode _phoneFocusNode = FocusNode();
+  final FocusNode _addressFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -35,7 +38,7 @@ class _EditDeliveryAddressScreenState extends State<EditDeliveryAddressScreen> {
     super.didChangeDependencies();
     deliveryAddress =
         ModalRoute.of(context)!.settings.arguments as DeliveryAddress;
-  
+
     _addressBloc
       ..add(UpdateIdDeliveryAddressEvent(deliveryAddress.id))
       ..add(TypeAddressChangeEvent(deliveryAddress.type))
@@ -47,6 +50,9 @@ class _EditDeliveryAddressScreenState extends State<EditDeliveryAddressScreen> {
 
   @override
   void dispose() {
+    _nameFocusNode.dispose();
+    _phoneFocusNode.dispose();
+    _addressFocusNode.dispose();
     _addressBloc.close();
     super.dispose();
   }
@@ -103,6 +109,7 @@ class _EditDeliveryAddressScreenState extends State<EditDeliveryAddressScreen> {
                         height: 54,
                         alignment: Alignment.center,
                         child: TextFormField(
+                          focusNode: _nameFocusNode,
                           initialValue: deliveryAddress.recipientName,
                           cursorColor: AppColors.primary,
                           decoration: const InputDecoration(
@@ -123,6 +130,7 @@ class _EditDeliveryAddressScreenState extends State<EditDeliveryAddressScreen> {
                         height: 54,
                         alignment: Alignment.center,
                         child: TextFormField(
+                          focusNode: _phoneFocusNode,
                           initialValue: deliveryAddress.phone,
                           cursorColor: AppColors.primary,
                           keyboardType: TextInputType.phone,
@@ -150,6 +158,7 @@ class _EditDeliveryAddressScreenState extends State<EditDeliveryAddressScreen> {
                         height: 54,
                         alignment: Alignment.center,
                         child: TextFormField(
+                          focusNode: _addressFocusNode,
                           initialValue: deliveryAddress.address,
                           cursorColor: AppColors.primary,
                           decoration: const InputDecoration(
@@ -276,6 +285,9 @@ class _EditDeliveryAddressScreenState extends State<EditDeliveryAddressScreen> {
                                 12, 24, 12, 6),
                             child: ElevatedButton(
                               onPressed: () {
+                                _nameFocusNode.unfocus();
+                                _phoneFocusNode.unfocus();
+                                _addressFocusNode.unfocus();
                                 _addressBloc
                                     .add(EditDeliveryAddressToServerEvent());
                               },
@@ -300,6 +312,9 @@ class _EditDeliveryAddressScreenState extends State<EditDeliveryAddressScreen> {
                                 12, 6, 12, 6),
                             child: TextButton(
                               onPressed: () async {
+                                _nameFocusNode.unfocus();
+                                _phoneFocusNode.unfocus();
+                                _addressFocusNode.unfocus();
                                 bool isRemove =
                                     await showBottomSheetRemoveAddress();
                                 if (isRemove)

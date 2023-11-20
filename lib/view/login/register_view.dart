@@ -30,7 +30,10 @@ class RegisterState extends State<RegisterView> {
   late final TextEditingController _confirmController;
   late bool _hiddenPassword;
   late bool _hiddenConfirmPassword;
-
+  final FocusNode _nameFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _confirmPasswordFocusNode = FocusNode();
   @override
   void initState() {
     _hiddenPassword = true;
@@ -46,6 +49,11 @@ class RegisterState extends State<RegisterView> {
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+
+    _nameFocusNode.dispose();
+    _emailFocusNode.dispose();
+    _confirmPasswordFocusNode.dispose();
+    _passwordFocusNode.dispose();
 
     _nameController.dispose();
     _confirmController.dispose();
@@ -130,6 +138,7 @@ class RegisterState extends State<RegisterView> {
                     ),
                     const SizedBox(height: 32),
                     TextField(
+                      focusNode: _nameFocusNode,
                       controller: _nameController,
                       autocorrect: false,
                       cursorColor: Colors.grey,
@@ -156,6 +165,7 @@ class RegisterState extends State<RegisterView> {
                     ),
                     const SizedBox(height: 16),
                     TextField(
+                      focusNode: _emailFocusNode,
                       controller: _emailController,
                       autocorrect: false,
                       cursorColor: Colors.grey,
@@ -182,6 +192,7 @@ class RegisterState extends State<RegisterView> {
                     ),
                     const SizedBox(height: 16),
                     TextField(
+                      focusNode: _passwordFocusNode,
                       controller: _passwordController,
                       cursorColor: Colors.grey,
                       obscureText: _hiddenPassword,
@@ -220,6 +231,7 @@ class RegisterState extends State<RegisterView> {
                     ),
                     const SizedBox(height: 16),
                     TextField(
+                      focusNode: _confirmPasswordFocusNode,
                       controller: _confirmController,
                       cursorColor: Colors.grey,
                       obscureText: _hiddenConfirmPassword,
@@ -261,6 +273,10 @@ class RegisterState extends State<RegisterView> {
                       width: (MediaQuery.of(context).size.width) * (2 / 3),
                       child: ElevatedButton(
                         onPressed: () {
+                          _nameFocusNode.unfocus();
+                          _emailFocusNode.unfocus();
+                          _confirmPasswordFocusNode.unfocus();
+                          _passwordFocusNode.unfocus();
                           context.read<AuthBloc>().add(
                                 AuthEventRegister(
                                   email: _emailController.text,

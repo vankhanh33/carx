@@ -25,6 +25,9 @@ class EditProfileScreen extends StatefulWidget {
 
 class EditProfileScreenState extends State<EditProfileScreen> {
   late EditProfileBloc profileBloc;
+  final FocusNode _nameFocusNode = FocusNode();
+  final FocusNode _phoneFocusNode = FocusNode();
+  final FocusNode _addressFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -36,6 +39,9 @@ class EditProfileScreenState extends State<EditProfileScreen> {
   @override
   void dispose() {
     super.dispose();
+    _nameFocusNode.dispose();
+    _phoneFocusNode.dispose();
+    _addressFocusNode.dispose();
     profileBloc.close();
   }
 
@@ -282,6 +288,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
                               ),
                               const SizedBox(height: 32),
                               TextFormField(
+                                focusNode: _nameFocusNode,
                                 cursorColor: AppColors.primary,
                                 initialValue: state.name,
                                 decoration: InputDecoration(
@@ -308,6 +315,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
                               ),
                               const SizedBox(height: 16),
                               TextFormField(
+                                focusNode: _addressFocusNode,
                                 initialValue: state.address,
                                 cursorColor: AppColors.primary,
                                 decoration: InputDecoration(
@@ -335,6 +343,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
                               ),
                               const SizedBox(height: 16),
                               TextFormField(
+                                focusNode: _phoneFocusNode,
                                 initialValue: state.phone,
                                 cursorColor: AppColors.primary,
                                 decoration: InputDecoration(
@@ -471,6 +480,9 @@ class EditProfileScreenState extends State<EditProfileScreen> {
                                     Expanded(
                                       child: ElevatedButton(
                                         onPressed: () async {
+                                          _nameFocusNode.unfocus();
+                                          _phoneFocusNode.unfocus();
+                                          _addressFocusNode.unfocus();
                                           bool isSave =
                                               await showSaveProfileDialog(
                                             context: context,
